@@ -20,5 +20,8 @@
                       "emoji":  "🛒",
                       "url":  "https://comforting-gumption-b35bdf.netlify.app"
                   }
-              ]
+              ],
+    "variant":  "paper",
+    "category":  "Shop",
+    "span":  6
 }

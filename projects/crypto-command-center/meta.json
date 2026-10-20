@@ -12,5 +12,8 @@
                  "HTML"
              ],
     "demoLabel":  "Open dashboard",
-    "tableLabel":  "Open"
+    "tableLabel":  "Open",
+    "variant":  "dashed",
+    "category":  "Dashboard",
+    "span":  5
 }

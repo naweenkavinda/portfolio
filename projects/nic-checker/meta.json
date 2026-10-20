@@ -12,5 +12,8 @@
                  "JavaScript"
              ],
     "demoLabel":  "Open tool",
-    "tableLabel":  "Open"
+    "tableLabel":  "Open",
+    "variant":  "accent",
+    "category":  "Tool",
+    "span":  4
 }

@@ -12,5 +12,8 @@
                  "JavaScript"
              ],
     "demoLabel":  "Open 3D model",
-    "tableLabel":  "Open"
+    "tableLabel":  "Open",
+    "variant":  "paper",
+    "category":  "3D model",
+    "span":  7
 }

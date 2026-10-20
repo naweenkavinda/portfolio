@@ -12,5 +12,8 @@
                  "JavaScript"
              ],
     "demoLabel":  "Open demo",
-    "tableLabel":  "Demo"
+    "tableLabel":  "Demo",
+    "variant":  "paper",
+    "category":  "Ops",
+    "span":  4
 }

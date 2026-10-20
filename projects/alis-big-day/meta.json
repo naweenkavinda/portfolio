@@ -14,5 +14,8 @@
                  "Web Audio"
              ],
     "demoLabel":  "Play",
-    "tableLabel":  "Play"
+    "tableLabel":  "Play",
+    "variant":  "dark",
+    "category":  "Kids",
+    "span":  6
 }

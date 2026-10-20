@@ -6,7 +6,9 @@
 #   README.md  - title (first "# " heading), summary (first paragraph), tech ("## Tech" bullets)
 #   index.html - if present, the project gets a demo button
 #   meta.json  - optional overrides: title, summary, blurb, tech[], emoji, icon, kind
-#                (live | demo | snapshot), demoLabel, tableLabel, order, links[{label,url,emoji}]
+#                (live | demo | snapshot), demoLabel, tableLabel, order, links[{label,url,emoji}],
+#                span (plot width in 12ths: 4 5 6 7 8 12; default 6), variant (paper | dashed |
+#                accent | dark), category (the small label after "Plot NN")
 param([string]$Root = (Get-Location).Path)
 $ErrorActionPreference = 'Stop'
 $utf8 = New-Object System.Text.UTF8Encoding $false
@@ -92,6 +94,9 @@ $projects = foreach ($d in Get-ChildItem (Join-Path $Root 'projects') -Directory
     links      = @(@($m.links) | Where-Object { $_ -and $_.url })
     order      = $order
     hasDemo    = $hasDemo
+    span       = $(if ($m.span -and @(4, 5, 6, 7, 8, 12) -contains [int]$m.span) { [int]$m.span } else { 6 })
+    variant    = $(if (@('paper', 'dashed', 'accent', 'dark') -contains $m.variant) { $m.variant } elseif ($m.kind -eq 'snapshot') { 'dashed' } else { 'paper' })
+    category   = First $m.category 'Project'
   }
 }
 $projects = @($projects | Sort-Object order, title)
@@ -102,30 +107,22 @@ $i = 0
 foreach ($p in $projects) {
   $i++
   $icon = if ($ICONS.ContainsKey($p.icon)) { $ICONS[$p.icon] } else { $ICONS.sheet }
-  $kindHtml = ''
-  if ($p.kind -and $KIND.ContainsKey($p.kind)) {
-    $cls = if ($p.kind -eq 'live') { 'kind live' } else { 'kind' }
-    $kindHtml = "<span class=""$cls"">$($KIND[$p.kind])</span>"
-  }
-  $tags = ($p.tech | ForEach-Object { "<span>$(Esc $_)</span>" }) -join ''
+  $badge = ''
+  if ($p.kind -and $KIND.ContainsKey($p.kind)) { $badge = "<span class=""badge $($p.kind)"">$($KIND[$p.kind])</span>" }
+  $stack = ($p.tech | Select-Object -First 3 | ForEach-Object { Esc $_ }) -join ' &middot; '
+  $arr = '<span class="arr">&#8599;</span>'
   $acts = @()
-  if ($p.hasDemo) { $acts += "<a class=""btn primary"" href=""projects/$($p.slug)/"" target=""_blank"" rel=""noopener"">$(Esc $p.demoLabel) $ARROW</a>" }
-  foreach ($l in $p.links) { $acts += "<a class=""btn"" href=""$(Esc $l.url)"" target=""_blank"" rel=""noopener"">$(Esc $l.label) $ARROW</a>" }
-  $acts += "<a class=""btn"" href=""$tree$($p.slug)"" target=""_blank"" rel=""noopener"">Details</a>"
+  if ($p.hasDemo) { $acts += "<a class=""btn solid"" href=""projects/$($p.slug)/"" target=""_blank"" rel=""noopener"">$(Esc $p.demoLabel) $arr</a>" }
+  foreach ($l in $p.links) { $acts += "<a class=""btn line"" href=""$(Esc $l.url)"" target=""_blank"" rel=""noopener"">$(Esc $l.label) $arr</a>" }
+  $acts += "<a class=""more"" href=""$tree$($p.slug)"" target=""_blank"" rel=""noopener"">Details</a>"
   [void]$cards.Append(@"
-      <article class="card">
-        <div class="art">
-          <span class="dwg">DWG-$('{0:D2}' -f $i)</span>$kindHtml
-          <svg viewBox="0 0 120 120" aria-hidden="true">$icon</svg>
-        </div>
-        <div class="body">
-          <h3>$(Esc $p.title)</h3>
-          <p>$(Esc $p.blurb)</p>
-          <div class="tags">$tags</div>
-        </div>
-        <div class="actions">
-          $($acts -join "`n          ")
-        </div>
+      <article class="plot $($p.variant) s$($p.span)" data-slug="$($p.slug)">
+        <span class="speed" aria-hidden="true"></span>
+        <div class="plot-top mono"><span>Plot $('{0:D2}' -f $i) &middot; $(Esc $p.category)</span>$badge</div>
+        <svg class="ico" viewBox="0 0 120 120" aria-hidden="true">$icon</svg>
+        <h3>$(Esc $p.title)</h3>
+        <p>$(Esc $p.blurb)</p>
+        <div class="plot-foot"><span class="stack">$stack</span><span class="btns">$($acts -join '')</span></div>
       </article>
 
 "@)
@@ -148,7 +145,7 @@ $changed = $false
 $ip = Join-Path $Root 'index.html'
 $html = Read-Text $ip
 $new = Splice $html '<!-- CARDS:START -->' '<!-- CARDS:END -->' ($cards.ToString().TrimEnd() + "`n     ")
-$count = if ($projects.Count -eq 1) { '1 project' } else { "$($projects.Count) projects" }
+$count = "$($projects.Count)"
 $new = Splice $new '<!-- COUNT -->' '<!-- /COUNT -->' $count -Inline
 if ($new -ne $html) { Write-Text $ip $new; $changed = $true; Write-Host 'Updated index.html' }
 
