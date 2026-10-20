@@ -27,6 +27,7 @@ This repo is a living portfolio of things I've built: internal tools, calculator
 | 🛂 | **[Visitor Check-in System](projects/visitor-checkin)** | Digital visitor management for office entrance | `HTML` `CSS` `JavaScript` | **[▶ Demo](https://naweenkavinda.github.io/portfolio/projects/visitor-checkin/)** |
 | 📚 | **[Bitcoin Pelahara Book Shop](projects/book-shop)** | Online order page for a Sinhala Bitcoin book with photo processing | `HTML` `Python` `OpenCV` `FormSubmit` | **[▶ Demo](https://naweenkavinda.github.io/portfolio/projects/book-shop/)**<br><sub>[🛒 Real shop](https://comforting-gumption-b35bdf.netlify.app)</sub> |
 | 🐘 | **[Ali's Big Day](projects/alis-big-day)** | 15-page interactive storybook that builds thinking skills and hand-eye coordination for ages 3–6 | `HTML` `CSS` `JavaScript` `SVG` `Web Audio` | **[▶ Play](https://naweenkavinda.github.io/portfolio/projects/alis-big-day/)** |
+| 🗺️ | **[Portfolio Homepage](projects/portfolio-homepage)** | This homepage: a site-plan design with line-art doodles that builds itself from the projects folder and checks every push for private data | `HTML` `JavaScript` `PowerShell` `GitHub Actions` | **[▶ Open](https://naweenkavinda.github.io/portfolio/)** |
 <!-- PROJECTS:END -->
 
 <sub>Demos run on GitHub Pages. The book shop and visitor check-in demos send no data, the Work Command Center demo uses sample tasks, and the Crypto Command Center is a frozen data snapshot.</sub>

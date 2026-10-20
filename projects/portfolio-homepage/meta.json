@@ -1,0 +1,16 @@
+{
+  "order": 8,
+  "emoji": "🗺️",
+  "icon": "site",
+  "kind": "live",
+  "title": "Portfolio Homepage",
+  "summary": "This homepage: a site-plan design with line-art doodles that builds itself from the projects folder and checks every push for private data",
+  "blurb": "The page you're on. Drawn as a site plan, with doodles that wander the sheet, plots that build themselves from the projects folder, and a privacy check on every push.",
+  "tech": ["HTML", "JavaScript", "PowerShell", "GitHub Actions"],
+  "demoUrl": "./",
+  "demoLabel": "You're here",
+  "tableLabel": "Open",
+  "span": 12,
+  "variant": "accent",
+  "category": "Website"
+}

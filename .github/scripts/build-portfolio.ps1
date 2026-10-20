@@ -8,7 +8,9 @@
 #   meta.json  - optional overrides: title, summary, blurb, tech[], emoji, icon, kind
 #                (live | demo | snapshot), demoLabel, tableLabel, order, links[{label,url,emoji}],
 #                span (plot width in 12ths: 4 5 6 7 8 12; default 6), variant (paper | dashed |
-#                accent | dark), category (the small label after "Plot NN")
+#                accent | dark), category (the small label after "Plot NN"),
+#                demoUrl (demo link when the live page isn't the folder's own index.html:
+#                a full https URL, or a path relative to the site root such as "./")
 param([string]$Root = (Get-Location).Path)
 $ErrorActionPreference = 'Stop'
 $utf8 = New-Object System.Text.UTF8Encoding $false
@@ -44,6 +46,7 @@ $ICONS = @{
   book     = '<path d="M60 26v72"/><path d="M60 26c-14-8-30-8-44-2v72c14-6 30-6 44 2"/><path d="M60 26c14-8 30-8 44-2v72c-14-6-30-6-44 2"/><path d="M26 42c8-3 16-3 24 0M26 54c8-3 16-3 24 0M70 42c8-3 16-3 24 0"/>'
   elephant = '<circle cx="60" cy="56" r="26"/><ellipse cx="28" cy="52" rx="14" ry="18"/><ellipse cx="92" cy="52" rx="14" ry="18"/><path d="M54 64c-2 12-2 22 4 28 4 4 10 2 10-4"/><circle cx="50" cy="50" r="2.5"/><circle cx="70" cy="50" r="2.5"/><path d="M46 34c8-10 20-10 28 0"/>'
   sheet    = '<rect x="20" y="14" width="80" height="92"/><path d="M20 30h80"/><path d="M32 46h56M32 58h56M32 70h40"/><path d="M64 86h36v20H64z"/><path d="M64 96h36"/>'
+  site     = '<rect x="8" y="16" width="104" height="88" rx="4"/><path d="M8 32h104"/><circle cx="18" cy="24" r="2"/><circle cx="26" cy="24" r="2"/><rect x="18" y="42" width="48" height="26"/><rect x="72" y="42" width="30" height="26"/><rect x="18" y="74" width="30" height="20"/><rect x="54" y="74" width="48" height="20"/>'
 }
 $KIND = @{ live = 'Live'; demo = 'Demo'; snapshot = 'Snapshot' }
 $ARROW = '<svg viewBox="0 0 16 16"><path d="M6 3h7v7M13 3 4 12"/></svg>'
@@ -77,7 +80,10 @@ $projects = foreach ($d in Get-ChildItem (Join-Path $Root 'projects') -Directory
   $mp = Join-Path $d.FullName 'meta.json'
   if (Test-Path $mp) { (Read-Text $mp | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $m[$_.Name] = $_.Value } }
   $rd = From-Readme $d.FullName
-  $hasDemo = Test-Path (Join-Path $d.FullName 'index.html')
+  $demoUrl = $null
+  if ($m.demoUrl) { $demoUrl = [string]$m.demoUrl }
+  elseif (Test-Path (Join-Path $d.FullName 'index.html')) { $demoUrl = "projects/$($d.Name)/" }
+  $hasDemo = [bool]$demoUrl
   $summary = First $m.summary $rd.summary ''
   $order = 1000; if ($null -ne $m.order) { $order = [int]$m.order }
   [pscustomobject]@{
@@ -94,6 +100,7 @@ $projects = foreach ($d in Get-ChildItem (Join-Path $Root 'projects') -Directory
     links      = @(@($m.links) | Where-Object { $_ -and $_.url })
     order      = $order
     hasDemo    = $hasDemo
+    demoUrl    = $demoUrl
     span       = $(if ($m.span -and @(4, 5, 6, 7, 8, 12) -contains [int]$m.span) { [int]$m.span } else { 6 })
     variant    = $(if (@('paper', 'dashed', 'accent', 'dark') -contains $m.variant) { $m.variant } elseif ($m.kind -eq 'snapshot') { 'dashed' } else { 'paper' })
     category   = First $m.category 'Project'
@@ -112,7 +119,7 @@ foreach ($p in $projects) {
   $stack = ($p.tech | Select-Object -First 3 | ForEach-Object { Esc $_ }) -join ' &middot; '
   $arr = '<span class="arr">&#8599;</span>'
   $acts = @()
-  if ($p.hasDemo) { $acts += "<a class=""btn solid"" href=""projects/$($p.slug)/"" target=""_blank"" rel=""noopener"">$(Esc $p.demoLabel) $arr</a>" }
+  if ($p.hasDemo) { $acts += "<a class=""btn solid"" href=""$(Esc $p.demoUrl)"" target=""_blank"" rel=""noopener"">$(Esc $p.demoLabel) $arr</a>" }
   foreach ($l in $p.links) { $acts += "<a class=""btn line"" href=""$(Esc $l.url)"" target=""_blank"" rel=""noopener"">$(Esc $l.label) $arr</a>" }
   $acts += "<a class=""more"" href=""$tree$($p.slug)"" target=""_blank"" rel=""noopener"">Details</a>"
   [void]$cards.Append(@"
@@ -134,7 +141,8 @@ $rows.Add('| | Project | What it is | Tech | Live demo |')
 $rows.Add('|:---:|:---|:---|:---|:---:|')
 foreach ($p in $projects) {
   $tech = ($p.tech | ForEach-Object { '`' + $_ + '`' }) -join ' '
-  $demo = if ($p.hasDemo) { "**[$([char]0x25B6) $($p.tableLabel)]($($site)projects/$($p.slug)/)**" } else { '' }
+  $demoHref = if ($p.demoUrl -match '^https?://') { $p.demoUrl } else { $site + ($p.demoUrl -replace '^\./', '') }
+  $demo = if ($p.hasDemo) { "**[$([char]0x25B6) $($p.tableLabel)]($demoHref)**" } else { '' }
   foreach ($l in $p.links) { $label = ((First $l.emoji '') + ' ' + $l.label).Trim(); $demo += "<br><sub>[$label]($($l.url))</sub>" }
   $what = ($p.summary -replace '\|', '\|')
   $rows.Add("| $($p.emoji) | **[$($p.title)](projects/$($p.slug))** | $what | $tech | $demo |")
