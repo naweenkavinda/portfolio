@@ -175,16 +175,60 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
 .stick .dash { opacity: 0; }
 .stick.running .dash { opacity: 1; animation: flick .3s steps(2) infinite; }
 .stick.running.toL .dash { transform: translateX(126px); }
-/* the welcome engineer: slides out from behind the right edge of the name on every page load */
+/* the welcome engineer: a jointed line-art stick man who walks out from behind the name on every page load */
 .welcome { position: absolute; overflow: hidden; pointer-events: none; z-index: 4; }
-.welcome .who { position: absolute; left: 0; bottom: 0; transform: translateX(-110%); transform-origin: 50% 100%; }
-.welcome .who img { display: block; width: 100%; height: 100%; }
-.welcome .sign { position: absolute; left: 14%; top: 38%; width: 72%; box-sizing: border-box; padding: 6% 4% 5%; background: var(--paper); border: 3px solid var(--ink);
-  box-shadow: 5px 5px 0 var(--ink); text-align: center; opacity: 0; transform-origin: 20% 80%; }
-.welcome .sign b { display: block; font: 900 1em/1 var(--display); text-transform: uppercase; letter-spacing: .02em; }
-.welcome .sign small { display: block; margin-top: .35em; font: 500 .34em/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
-.welcome .rays { position: absolute; inset: -18px; border: 2px dashed var(--accent); opacity: 0; }
-.welcome.shine .rays { opacity: 1; animation: flick .4s steps(2) infinite; }
+.welcome .who { position: absolute; left: 0; bottom: 0; transform: translateX(-100%); }
+.welcome svg { display: block; width: 100%; height: 100%; overflow: visible; stroke: var(--ink); fill: none; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.welcome svg * { transform-box: view-box; }
+.welcome .bod { transition: transform .45s var(--ease); }
+.welcome .thL, .welcome .thR { transform-origin: 90px 140px; transition: transform .45s var(--ease); }
+.welcome .shL, .welcome .shR { transform-origin: 90px 186px; transition: transform .45s var(--ease); }
+.welcome .uaL, .welcome .uaR { transform-origin: 90px 76px; transition: transform .4s var(--ease); }
+.welcome .faL, .welcome .faR { transform-origin: 90px 114px; transition: transform .4s var(--ease); }
+.welcome .eyes { transition: transform .25s; }
+.welcome .grin, .welcome .boxdown, .welcome .rays { display: none; }
+.welcome.happy .grin { display: inline; }
+.welcome.happy .smile { display: none; }
+.welcome.down .boxdown { display: inline; }
+.welcome.down .carried { display: none; }
+.welcome.shine .rays { display: inline; animation: flick .4s steps(2) infinite; }
+.welcome .lid { transform-origin: 83px 199px; transition: transform .35s var(--ease); }
+.welcome.open .lid { transform: rotate(-120deg); }
+.welcome.lookL .eyes { transform: translateX(-3px); }
+.welcome.lookR .eyes { transform: translateX(3px); }
+/* poses (later rules win) */
+.welcome .thL { transform: rotate(9deg); }
+.welcome .thR { transform: rotate(-9deg); }
+.welcome .uaL { transform: rotate(12deg); }
+.welcome .uaR { transform: rotate(-20deg); }
+.welcome .faR { transform: rotate(20deg); }
+.welcome.walking .thL { animation: wkA .5s ease-in-out infinite alternate; }
+.welcome.walking .thR { animation: wkB .5s ease-in-out infinite alternate; }
+.welcome.walking .shL { animation: knA .5s ease-in-out infinite alternate; }
+.welcome.walking .shR { animation: knB .5s ease-in-out infinite alternate; }
+.welcome.walking .uaL { animation: swing .5s ease-in-out infinite alternate; }
+.welcome.walking .bod { animation: bobW .25s ease-in-out infinite alternate; }
+.welcome.crouch .bod { transform: translateY(40.6px); }
+.welcome.crouch .thL { transform: rotate(56deg); }
+.welcome.crouch .shL { transform: rotate(-112deg); }
+.welcome.crouch .thR { transform: rotate(-56deg); }
+.welcome.crouch .shR { transform: rotate(112deg); }
+.welcome.crouch .uaL { transform: rotate(32deg); }
+.welcome.pull .uaR { transform: rotate(-56deg); }
+.welcome.pull .faR { transform: rotate(0deg); }
+.welcome.show .uaL { transform: rotate(70deg); }
+.welcome.show .faL { transform: rotate(-6deg); }
+.welcome.show .uaR { transform: rotate(-70deg); }
+.welcome.show .faR { transform: rotate(6deg); }
+.welcome.wave .uaL { transform: rotate(145deg); }
+.welcome.wave .faL { animation: fwave .3s ease-in-out infinite alternate; }
+@keyframes wkA { from { transform: rotate(20deg); } to { transform: rotate(-20deg); } }
+@keyframes wkB { from { transform: rotate(-20deg); } to { transform: rotate(20deg); } }
+@keyframes knA { from { transform: rotate(-14deg); } to { transform: rotate(4deg); } }
+@keyframes knB { from { transform: rotate(4deg); } to { transform: rotate(-14deg); } }
+@keyframes swing { from { transform: rotate(-8deg); } to { transform: rotate(30deg); } }
+@keyframes bobW { from { transform: translateY(0); } to { transform: translateY(-3px); } }
+@keyframes fwave { from { transform: rotate(-35deg); } to { transform: rotate(15deg); } }
 .spark { position: absolute; width: 60px; height: 60px; margin: -30px 0 0 -30px; pointer-events: none; z-index: 4; overflow: visible;
   stroke: var(--accent); fill: none; stroke-width: 3; stroke-linecap: round; }
 .tape { position: absolute; left: 0; top: -22px; width: 100%; height: 20px; overflow: visible; pointer-events: none; z-index: 2; }
@@ -640,45 +684,73 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
     // Room to the right of the letters: up to the role text if it sits beside the name, else the header edge.
     var roles = document.querySelector('.roles'), rr = roles && roles.getBoundingClientRect();
     var limit = rr && rr.top < bottom && rr.left > right ? rr.left : hr.right;
-    var hgt = Math.min(270, (bottom - top) * 1.05, (limit - right - 24) / 0.97);
-    if (hgt < 96) return;
-    var wid = hgt * 220 / 226;
-    var wrap = document.createElement('div'); wrap.className = 'welcome';
-    wrap.style.cssText = 'left:' + (right - hr.left + 2) + 'px;top:' + (bottom - hr.top - hgt) + 'px;width:' + (wid + 30) + 'px;height:' + hgt + 'px';
-    wrap.innerHTML = '<div class="who" style="width:' + wid + 'px;height:' + hgt + 'px">' +
-      '<img src="assets/welcome-engineer.png" alt="" width="220" height="226">' +
-      '<div class="sign" style="font-size:' + Math.round(hgt * 0.15) + 'px"><span class="rays"></span><b>Welcome!</b><small>to my site plan</small></div>' +
-      '</div>';
-    header.appendChild(wrap);
-    var who = wrap.querySelector('.who'), sign = wrap.querySelector('.sign'), c = wrap.classList;
+    var hgt = Math.min(270, (bottom - top) * 1.1, (limit - right - 24) / 0.75);
+    if (hgt < 100) return;
+    var wid = hgt * 180 / 240;
+    var wrap = document.createElement('div'); wrap.className = 'welcome walking lookR';
+    wrap.style.cssText = 'left:' + (right - hr.left + 2) + 'px;top:' + (bottom - hr.top - hgt) + 'px;width:' + (wid * 1.12) + 'px;height:' + hgt + 'px';
+    var who = document.createElement('div'); who.className = 'who'; who.style.width = wid + 'px'; who.style.height = hgt + 'px';
+    who.appendChild(svg(
+      // the jointed engineer (shoulders 90,76 · elbows 90,114 · hips 90,140 · knees 90,186 · feet on y=232)
+      '<g class="bod">' +
+        '<g class="thL"><path d="M90 140 L90 186"></path><g class="shL"><path d="M90 186 L90 232 h-9"></path></g></g>' +
+        '<g class="thR"><path d="M90 140 L90 186"></path><g class="shR"><path d="M90 186 L90 232 h9"></path></g></g>' +
+        '<path d="M90 61 V140"></path>' +
+        '<path d="M83 70 L90 82 L97 70" stroke="' + ACCENT + '" stroke-width="3"></path>' +
+        '<g class="uaL"><path d="M90 76 L90 114"></path><g class="faL"><path d="M90 114 L90 152"></path></g></g>' +
+        '<g class="uaR"><path d="M90 76 L90 114"></path><g class="faR"><path d="M90 114 L90 152"></path>' +
+          '<g class="carried"><path d="M84 159 v-7 h12 v7"></path><rect x="72" y="159" width="36" height="34" rx="2" fill="#F2A33A"></rect><path d="M72 168 H108"></path><path d="M86 177 h8"></path></g>' +
+        '</g></g>' +
+        '<circle cx="90" cy="44" r="17" fill="#F5F3EE"></circle>' +
+        '<path d="M72 41 C73 17 107 17 108 41 Z" fill="#FFC21A"></path><path d="M66 41 H114"></path><path d="M90 20 V41" stroke-width="2.2"></path>' +
+        '<g class="eyes"><circle cx="84" cy="47" r="2.2" fill="#111" stroke="none"></circle><circle cx="96" cy="47" r="2.2" fill="#111" stroke="none"></circle></g>' +
+        '<path class="smile" d="M84 54 q6 4 12 0" stroke-width="2.6"></path><path class="grin" d="M81 52 q9 10 18 0" stroke-width="2.8"></path>' +
+      '</g>' +
+      // the board (held in front when shown, otherwise tucked inside the toolbox)
+      '<g class="board" opacity="0">' +
+        '<rect class="rays" x="16" y="56" width="148" height="76" rx="6" stroke="' + ACCENT + '" stroke-width="2.4" stroke-dasharray="6 6"></rect>' +
+        '<rect x="26" y="66" width="128" height="56" rx="3" fill="#F5F3EE" stroke-width="3.4"></rect>' +
+        '<text x="90" y="100" text-anchor="middle" font-family="Big Shoulders Display, Impact, sans-serif" font-weight="900" font-size="30" letter-spacing="1" fill="#111" stroke="none">WELCOME!</text>' +
+        '<text x="90" y="114" text-anchor="middle" font-family="Martian Mono, monospace" font-size="8.5" letter-spacing="1" fill="#111" stroke="none">TO MY SITE PLAN</text>' +
+      '</g>' +
+      // the toolbox once it's set down on the ground
+      '<g class="boxdown"><path d="M97 197 v-7 h12 v7"></path><rect x="85" y="199" width="36" height="32" rx="2" fill="#F2A33A"></rect><path d="M99 213 h8"></path>' +
+        '<g class="lid"><rect x="83" y="193" width="40" height="7" rx="2" fill="#F2A33A"></rect></g></g>',
+      '', '0 0 180 240'));
+    wrap.appendChild(who); header.appendChild(wrap);
+    var c = wrap.classList, board = who.querySelector('.board');
     var ok = function () { return on && wrap.isConnected; };
     function mv(el, frames, dur, ease) { return el.animate(frames, { duration: dur, easing: ease || 'cubic-bezier(.2,.8,.2,1)', fill: 'forwards' }).finished; }
-    function walk(from, to, dur) {   // slide with a little bounce in each step
-      var f = [], n = 6;
-      for (var k = 0; k <= n; k++) f.push({ transform: 'translateX(' + (from + (to - from) * k / n) + '%) translateY(' + (k % 2 ? -4 : 0) + '%) rotate(' + (k % 2 ? 2 : -2) + 'deg)' });
-      return mv(who, f, dur, 'linear');
-    }
-    var img = wrap.querySelector('img');
-    if (!img.complete) await new Promise(function (r) { img.onload = img.onerror = r; });
+    var IN_BOX = 'translate(13px,119px) scale(.25)', PULLED = 'translate(42px,30px) scale(.6)';
+    function boardTo(a, b, dur, ease) { return mv(board, [{ transform: a, opacity: a === IN_BOX ? 0 : 1 }, { transform: b, opacity: b === IN_BOX ? 0 : 1 }], dur, ease); }
+    board.style.transformOrigin = '90px 94px';
 
-    await mv(who, [{ transform: 'translateX(-110%) rotate(0deg)' }, { transform: 'translateX(-58%) rotate(9deg)' }], 800);   // peeks out from behind the letters
-    await mv(who, [{ transform: 'translateX(-58%) rotate(9deg)' }, { transform: 'translateX(-58%) rotate(3deg)' }, { transform: 'translateX(-58%) rotate(9deg)' }], 700, 'ease-in-out');
+    await mv(who, [{ transform: 'translateX(-100%)' }, { transform: 'translateX(8%)' }], 1700, 'linear');   // walks out from behind the name
+    c.remove('walking', 'lookR'); await sleep(250);
     if (!ok()) return;
-    await walk(-58, 6, 900);                                         // steps out beside the name
-    await mv(who, [{ transform: 'translateX(6%) translateY(0)' }, { transform: 'translateX(6%) translateY(-7%)' }, { transform: 'translateX(6%) translateY(0)' }], 420, 'ease-in-out');
+    c.add('crouch'); await sleep(500);                               // sets the toolbox down
+    c.add('down'); await sleep(150);
+    c.add('open'); await sleep(350);
+    c.add('pull'); c.remove('crouch');                                 // pulls the board out and stands up
+    await boardTo(IN_BOX, PULLED, 520);
+    c.remove('pull'); c.add('show', 'happy');                          // and shows it with both hands
+    await boardTo(PULLED, 'none', 420);
     if (!ok()) return;
-    // the welcome board pops out of his toolbox
-    await mv(sign, [{ transform: 'translate(-28%, 55%) scale(.12) rotate(-20deg)', opacity: 0 }, { transform: 'translate(0, -8%) scale(1.08) rotate(3deg)', opacity: 1, offset: .7 }, { transform: 'none', opacity: 1 }], 700);
     c.add('shine');
-    sign.animate([{ transform: 'rotate(-2.5deg)' }, { transform: 'rotate(2.5deg)' }], { duration: 560, iterations: 5, direction: 'alternate', easing: 'ease-in-out' });
-    who.animate([{ transform: 'translateX(6%) translateY(0)' }, { transform: 'translateX(6%) translateY(-3%)' }], { duration: 280, iterations: 10, direction: 'alternate', easing: 'ease-in-out' });
-    await sleep(2900);
+    board.animate([{ transform: 'rotate(-2deg)' }, { transform: 'rotate(2deg)' }], { duration: 520, iterations: 5, direction: 'alternate', easing: 'ease-in-out' });
+    who.animate([{ transform: 'translateX(8%) translateY(0)' }, { transform: 'translateX(8%) translateY(-2.5%)' }], { duration: 300, iterations: 8, direction: 'alternate', easing: 'ease-in-out' });
+    await sleep(2700);
     if (!ok()) return;
-    c.remove('shine');
-    // back into the toolbox it goes
-    await mv(sign, [{ transform: 'none', opacity: 1 }, { transform: 'translate(-28%, 55%) scale(.12) rotate(-20deg)', opacity: 0 }], 550, 'ease-in');
-    await mv(who, [{ transform: 'translateX(6%) rotate(0deg)' }, { transform: 'translateX(6%) rotate(-6deg)' }, { transform: 'translateX(6%) rotate(0deg)' }], 600, 'ease-in-out');
-    await walk(6, -112, 1100);                                       // and walks back behind the name
+    c.remove('shine', 'show'); c.add('pull');                          // back into the toolbox
+    await boardTo('none', PULLED, 400);
+    c.add('crouch');
+    await boardTo(PULLED, IN_BOX, 450, 'ease-in');
+    c.remove('open', 'pull'); await sleep(350);
+    c.remove('down'); await sleep(150);                                // picks the toolbox up
+    c.remove('crouch'); await sleep(450);
+    c.add('wave'); await sleep(1100); c.remove('wave');                // waves goodbye
+    c.add('walking', 'lookL'); await sleep(150);
+    await mv(who, [{ transform: 'translateX(8%)' }, { transform: 'translateX(-102%)' }], 1600, 'linear');   // and walks back behind the name
     wrap.remove();
   }
 
