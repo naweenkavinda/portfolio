@@ -121,14 +121,28 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
 /* ---------- doodles ---------- */
 #doodles { position: fixed; inset: 0; pointer-events: none; z-index: 30; overflow: hidden; }
 #doodles svg, .peek svg, .tape { stroke: var(--ink); fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-.walker { position: absolute; bottom: max(6px, env(safe-area-inset-bottom, 0px)); left: 0; width: 132px; height: 62px; }
-.walker .leg { transform-box: fill-box; transform-origin: 50% 0; animation: step .42s ease-in-out infinite alternate; }
+#page-doodles { position: absolute; left: 0; top: 0; width: 100%; overflow: hidden; pointer-events: none; z-index: 30; }
+#page-doodles svg { stroke: var(--ink); fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.walker { position: absolute; left: 0; width: 176px; height: 84px; overflow: visible; }
+.walker * { transform-box: fill-box; }
+.walker .leg { transform-origin: 50% 0; animation: step .42s ease-in-out infinite alternate; }
 .walker .leg.b { animation-delay: -.42s; }
-.walker .tail { transform-box: fill-box; transform-origin: 100% 100%; animation: wag .3s ease-in-out infinite alternate; }
-.walker .head { transform-box: fill-box; transform-origin: 20% 80%; animation: bob .42s ease-in-out infinite alternate; }
+.walker .tail { transform-origin: 100% 100%; animation: wag .28s ease-in-out infinite alternate; }
+.walker .head { transform-origin: 10% 90%; animation: bob .42s ease-in-out infinite alternate; }
+.walker .ear { transform-origin: 50% 0; transition: transform .25s var(--ease); }
+.walker .front { animation: surge .84s ease-in-out infinite alternate; }
+.walker .rear { animation: surge .84s ease-in-out -.42s infinite alternate; }
+.walker .coil { transform-origin: 0 50%; animation: stretch .84s ease-in-out infinite alternate; }
 .walker .whoosh { animation: flick .5s steps(2) infinite; }
-.bird { position: absolute; left: 0; top: 0; width: 40px; height: 22px; }
-.bird .wings { transform-box: fill-box; transform-origin: 50% 70%; animation: flap .34s ease-in-out infinite alternate; }
+.walker .excl { opacity: 0; transition: opacity .2s; }
+.walker.hold .leg, .walker.hold .tail, .walker.hold .head, .walker.hold .front, .walker.hold .rear, .walker.hold .coil, .walker.hold .whoosh { animation-play-state: paused; }
+.walker.hold .whoosh { opacity: 0; }
+.walker.hold .ear { transform: rotate(-35deg); }
+.walker.hold .excl { opacity: 1; }
+.bird { position: absolute; left: 0; top: 0; width: 44px; height: 28px; overflow: visible; }
+.bird .wl, .bird .wr { transform-box: view-box; transform-origin: 22px 15px; animation: flapL .3s ease-in-out infinite alternate; }
+.bird .wr { animation-name: flapR; }
+.plane .prop { transform-box: fill-box; transform-origin: center; animation: spin .09s linear infinite alternate; }
 .plane { position: absolute; inset: 0; width: 100%; height: 100%; }
 .plane .trail { stroke-dasharray: 1; stroke-dashoffset: 1; stroke-width: 1.6; }
 .peek { position: absolute; top: -66px; width: 78px; height: 66px; overflow: hidden; pointer-events: none; z-index: 2; }
@@ -152,7 +166,11 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
 @keyframes wag { from { transform: rotate(-14deg); } to { transform: rotate(16deg); } }
 @keyframes bob { from { transform: translateY(0); } to { transform: translateY(1.5px) rotate(-2deg); } }
 @keyframes flick { 50% { opacity: .25; } }
-@keyframes flap { from { transform: scaleY(1); } to { transform: scaleY(-.55); } }
+@keyframes flapL { from { transform: rotate(34deg); } to { transform: rotate(-26deg); } }
+@keyframes flapR { from { transform: rotate(-34deg); } to { transform: rotate(26deg); } }
+@keyframes surge { from { transform: translateX(-3px); } to { transform: translateX(4px); } }
+@keyframes stretch { from { transform: scaleX(.93); } to { transform: scaleX(1.08); } }
+@keyframes spin { from { transform: scaleY(1); } to { transform: scaleY(.15); } }
 @keyframes blink { 50% { transform: scaleY(.1); } }
 @keyframes wave { from { transform: rotate(-10deg); } to { transform: rotate(18deg); } }
 
@@ -167,7 +185,7 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
   .js .plot.pre { clip-path: none; }
   .dim .run { stroke-dashoffset: 0; }
   .dim text { opacity: 1; }
-  #doodles { display: none; }
+  #doodles, #page-doodles { display: none; }
 }
 </style>
 </head>
@@ -311,7 +329,11 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
   btn.addEventListener('click', function () {
     on = !on; paint();
     try { localStorage.setItem('doodles', on ? 'on' : 'off'); } catch (e) {}
-    if (!on) { stage.innerHTML = ''; document.querySelectorAll('.peek, .tape').forEach(function (x) { x.remove(); }); }
+    if (!on) {
+      stage.innerHTML = ''; layer.innerHTML = '';
+      if (walking) { clearTimeout(walking.t); walking = null; }
+      document.querySelectorAll('.peek, .tape').forEach(function (x) { x.remove(); });
+    }
     else schedule(800);
   });
 
@@ -322,37 +344,67 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
   var W = function () { return window.innerWidth; }, H = function () { return window.innerHeight; };
   var ACCENT = '#FF5A1F';
 
+  /* The dog walks on the page itself: it scrolls with the content, holds on while
+     you scroll (ears up, "!"), and walks on once scrolling stops. */
+  var layer = document.createElement('div'); layer.id = 'page-doodles'; layer.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(layer);
+  var walking = null;
+  window.addEventListener('scroll', function () {
+    if (!walking) return;
+    walking.anim.pause(); walking.el.classList.add('hold');
+    clearTimeout(walking.t);
+    walking.t = setTimeout(function () { if (!walking) return; walking.el.classList.remove('hold'); walking.anim.play(); }, 300);
+  }, { passive: true });
+
   function dog() {
+    if (walking) return;
+    var coils = '';
+    for (var c = 0; c < 9; c++) coils += '<ellipse cx="' + (50 + c * 6.6) + '" cy="34" rx="4.6" ry="10.5"></ellipse>';
     var s = svg(
-      '<g class="whoosh"><path d="M2 26h10M0 34h14M4 42h8"></path></g>' +
-      '<path class="tail" d="M22 26 q-8 -4 -10 -12"></path>' +
-      '<path d="M24 24 C30 17 80 17 94 23 C100 27 100 37 94 39 C80 43 34 43 26 39 C19 36 19 27 24 24 Z"></path>' +
-      '<g class="head"><path d="M93 24 C95 13 105 9 113 13 C119 16 123 21 121 25 C119 29 111 29 105 29 C101 33 95 33 93 29"></path>' +
-      '<path d="M101 13 C97 15 95 25 99 29"></path><circle cx="110" cy="17" r="1.6" fill="#111"></circle><circle cx="121" cy="24" r="1.8" fill="#111"></circle></g>' +
-      '<path class="leg" d="M34 40 v14 h4"></path><path class="leg b" d="M42 40 v14 h4"></path>' +
-      '<path class="leg b" d="M80 40 v14 h4"></path><path class="leg" d="M88 40 v14 h4"></path>' +
-      '<path d="M8 59 H126" stroke-dasharray="3 7" stroke-width="1.4"></path>',
-      'walker', '0 0 132 62');
-    stage.appendChild(s);
-    var ltr = Math.random() < 0.6, from = ltr ? -150 : W() + 20, to = ltr ? W() + 20 : -150, flip = ltr ? 1 : -1;
-    var dur = Math.max(11000, W() * 13);
+      '<g class="whoosh"><path d="M2 28h10M0 36h14M4 44h8"></path></g>' +
+      '<g class="rear">' +
+        '<path class="tail" d="M24 26 c-7 -1 -10 -7 -6 -11 c4 -4 9 0 5 4 c-3 2 -6 -1 -4 -3"></path>' +
+        '<path class="leg" d="M30 44 v13 h5"></path><path class="leg b" d="M40 44 v13 h5"></path>' +
+        '<path d="M26 23 h20 v22 h-20 q-7 0 -7 -7 v-8 q0 -7 7 -7 Z" fill="#F5F3EE"></path>' +
+      '</g>' +
+      '<g class="coil">' + coils + '</g>' +
+      '<g class="front">' +
+        '<path class="leg b" d="M112 44 v13 h5"></path><path class="leg" d="M123 44 v13 h5"></path>' +
+        '<path d="M108 23 h16 q7 0 7 7 v8 q0 7 -7 7 h-16 Z" fill="#F5F3EE"></path>' +
+        '<path d="M126 21 v10" stroke="' + ACCENT + '" stroke-width="4"></path>' +
+        '<g class="head">' +
+          '<path d="M124 22 C123 10 133 3 145 5 C153 6 159 11 166 13 C173 15 173 23 166 24 C158 26 148 25 142 27 C136 30 127 29 124 25 Z" fill="#F5F3EE"></path>' +
+          '<path class="ear" d="M133 8 C125 10 122 25 128 32 C132 35 136 28 134 19 Z" fill="#F5F3EE"></path>' +
+          '<path d="M140 9 q4 -3 8 0"></path><circle cx="144" cy="13" r="1.9" fill="#111"></circle>' +
+          '<ellipse cx="168" cy="17" rx="3.6" ry="2.8" fill="#111"></ellipse>' +
+          '<path d="M153 22 q7 3 13 0"></path>' +
+        '</g>' +
+      '</g>' +
+      '<path class="excl" d="M150 -10 v-9 M150 -4 v.5" stroke-width="3"></path>' +
+      '<path d="M8 61 H170" stroke-dasharray="3 7" stroke-width="1.4"></path>',
+      'walker', '0 -22 176 86');
+    var doc = document.documentElement;
+    layer.style.height = doc.scrollHeight + 'px';
+    s.style.top = Math.min(doc.scrollHeight - 92, window.scrollY + H() - 92) + 'px';
+    layer.appendChild(s);
+    var ltr = Math.random() < 0.6, from = ltr ? -190 : W() + 20, to = ltr ? W() + 20 : -190, flip = ltr ? 1 : -1;
     var a = s.animate([
       { transform: 'translateX(' + from + 'px) scaleX(' + flip + ')' },
-      { transform: 'translateX(' + (from + (to - from) * .46) + 'px) scaleX(' + flip + ')', offset: .46 },
-      { transform: 'translateX(' + (from + (to - from) * .5) + 'px) scaleX(' + flip + ')', offset: .56 },
       { transform: 'translateX(' + to + 'px) scaleX(' + flip + ')' }
-    ], { duration: dur, easing: 'linear' });
-    done(s, a);
+    ], { duration: Math.max(12000, W() * 14), easing: 'linear' });
+    walking = { el: s, anim: a, t: null };
+    a.onfinish = function () { clearTimeout(walking && walking.t); s.remove(); walking = null; };
   }
 
   function birds() {
     var count = Math.round(rand(2, 4)), top = rand(.06, .28) * H(), ltr = Math.random() < .5;
     for (var i = 0; i < count; i++) {
       (function (i) {
-        var b = svg('<g class="wings"><path d="M2 12 Q11 1 20 11 Q29 1 38 12"></path></g>', 'bird', '0 0 40 22');
+        var b = svg('<path class="wl" d="M22 15 Q14 4 3 9"></path><path class="wr" d="M22 15 Q30 4 41 9"></path><path d="M19 16 q3 3 6 0"></path>', 'bird', '0 0 44 28');
         var sc = rand(.6, 1.1); stage.appendChild(b);
         var y = top + i * rand(14, 26), x0 = ltr ? -60 - i * 50 : W() + 60 + i * 50, x1 = ltr ? W() + 80 : -100;
-        b.querySelector('.wings').style.animationDuration = rand(.28, .4) + 's';
+        var beat = rand(.26, .38) + 's', phase = -rand(0, .3) + 's';
+        b.querySelectorAll('.wl, .wr').forEach(function (w) { w.style.animationDuration = beat; w.style.animationDelay = phase; });
         var frames = [];
         for (var k = 0; k <= 6; k++) {
           var t = k / 6;
@@ -374,9 +426,16 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
             ' S ' + (x1 - dir * 300) + ' ' + (y - 20) + ', ' + x1 + ' ' + (y - 10);
     var s = svg('<path class="trail" pathLength="1" d="' + d + '"></path>', 'plane', '0 0 ' + w + ' ' + h);
     s.setAttribute('preserveAspectRatio', 'none');
-    var p = document.createElementNS(NS, 'path');
-    p.setAttribute('d', 'M0 0 L-22 -9 L-16 0 L-22 9 Z M-16 0 L-22 9');
-    p.setAttribute('fill', '#F5F3EE');
+    // A small propeller plane in profile, nose at the origin, pointing along +x.
+    var p = document.createElementNS(NS, 'g');
+    p.innerHTML =
+      '<path d="M-30 1 L-41 14 L-34 14 L-20 3" fill="#F5F3EE"></path>' +
+      '<path d="M0 0 C-2 -6 -14 -8 -30 -7 L-46 -5 L-55 -15 L-60 -15 L-57 -2 C-57 2 -50 4 -40 5 C-24 6 -6 5 0 0 Z" fill="#F5F3EE"></path>' +
+      '<path d="M-12 -6 C-14 -11 -20 -12 -24 -7" fill="#F5F3EE"></path>' +
+      '<path d="M-48 -3 L-60 -1"></path>' +
+      '<path d="M-32 -3 h0.5 M-38 -3 h0.5 M-44 -3 h0.5" stroke-width="2.6"></path>' +
+      '<circle cx="-14" cy="9" r="2.2"></circle><path d="M-14 6 v-3" stroke-width="1.6"></path>' +
+      '<path class="prop" d="M3 -10 V10" stroke-width="2"></path><circle cx="2" cy="0" r="1.6" fill="#111"></circle>';
     s.appendChild(p); stage.appendChild(s);
     var trail = s.querySelector('.trail'), path = trail, L = path.getTotalLength(), dur = 7000, t0 = performance.now();
     trail.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: dur, easing: 'cubic-bezier(.45,0,.55,1)', fill: 'forwards' });
