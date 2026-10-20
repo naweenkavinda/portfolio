@@ -120,7 +120,7 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
 
 /* ---------- doodles ---------- */
 #doodles { position: fixed; inset: 0; pointer-events: none; z-index: 30; overflow: hidden; }
-#doodles svg, .peek svg, .tape { stroke: var(--ink); fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+#doodles svg, .tape { stroke: var(--ink); fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 #page-doodles { position: absolute; left: 0; top: 0; width: 100%; overflow: hidden; pointer-events: none; z-index: 30; }
 #page-doodles svg { stroke: var(--ink); fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 .walker { position: absolute; left: 0; width: 176px; height: 84px; overflow: visible; }
@@ -145,13 +145,38 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
 .plane .prop { transform-box: fill-box; transform-origin: center; animation: spin .09s linear infinite alternate; }
 .plane { position: absolute; inset: 0; width: 100%; height: 100%; }
 .plane .trail { stroke-dasharray: 1; stroke-dashoffset: 1; stroke-width: 1.6; }
-.peek { position: absolute; top: -66px; width: 78px; height: 66px; overflow: hidden; pointer-events: none; z-index: 2; }
-.peek svg { position: absolute; left: 0; bottom: -4px; width: 78px; height: 70px; transform: translateY(100%); transition: transform .7s var(--ease); }
-.peek.up svg { transform: translateY(6%); }
-.peek .eyes { transform-box: fill-box; transform-origin: center; }
-.peek.blink .eyes { animation: blink .25s; }
-.peek .wave { transform-box: fill-box; transform-origin: 0 100%; }
-.peek.waving .wave { animation: wave .35s ease-in-out 4 alternate; }
+/* stick figures that live on the plots' top edges */
+.stick { position: absolute; bottom: 100%; width: 84px; height: 120px; overflow: hidden; pointer-events: none; z-index: 3; }
+.stick.out { overflow: visible; }
+.stick svg { position: absolute; left: 0; bottom: 0; width: 84px; height: 120px; overflow: visible; transform: translateY(100%);
+  stroke: var(--ink); fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.stick svg * { transform-box: view-box; }
+.stick .armL, .stick .armR { transform-origin: 42px 46px; transition: transform .22s var(--ease); }
+.stick .legL, .stick .legR { transform-origin: 42px 76px; transition: transform .22s var(--ease); }
+.stick .whole { transform-origin: 42px 116px; transition: transform .25s var(--ease); }
+.stick .eyes { transform-origin: 42px 20px; transition: transform .2s; }
+.stick .grin { opacity: 0; }
+.stick.happy .grin { opacity: 1; }
+.stick.happy .smile { opacity: 0; }
+.stick.lookL .eyes { transform: translateX(-3px); }
+.stick.lookR .eyes { transform: translateX(3px); }
+.stick.blink .eyes { animation: blink .25s; }
+.stick.waving .armR { animation: sway .3s ease-in-out infinite alternate; }
+.stick.cheer .armL { transform: rotate(100deg); }
+.stick.cheer .armR { transform: rotate(-100deg); }
+.stick.hiR .armR { transform: rotate(-82deg); }
+.stick.hiL .armL { transform: rotate(82deg); }
+.stick.running .legL { animation: runA .2s linear infinite alternate; }
+.stick.running .legR { animation: runB .2s linear infinite alternate; }
+.stick.running .armL { animation: runB .2s linear infinite alternate; }
+.stick.running .armR { animation: runA .2s linear infinite alternate; }
+.stick.running .whole { transform: rotate(10deg); }
+.stick.running.toL .whole { transform: rotate(-10deg); }
+.stick .dash { opacity: 0; }
+.stick.running .dash { opacity: 1; animation: flick .3s steps(2) infinite; }
+.stick.running.toL .dash { transform: translateX(126px); }
+.spark { position: absolute; width: 60px; height: 60px; margin: -30px 0 0 -30px; pointer-events: none; z-index: 4; overflow: visible;
+  stroke: var(--accent); fill: none; stroke-width: 3; stroke-linecap: round; }
 .tape { position: absolute; left: 0; top: -22px; width: 100%; height: 20px; overflow: visible; pointer-events: none; z-index: 2; }
 .tape .run { stroke-dasharray: 1; stroke-dashoffset: 1; }
 .tape text { font: 500 11px var(--mono); letter-spacing: .06em; fill: var(--ink); stroke: none; }
@@ -172,7 +197,9 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
 @keyframes stretch { from { transform: scaleX(.93); } to { transform: scaleX(1.08); } }
 @keyframes spin { from { transform: scaleY(1); } to { transform: scaleY(.15); } }
 @keyframes blink { 50% { transform: scaleY(.1); } }
-@keyframes wave { from { transform: rotate(-10deg); } to { transform: rotate(18deg); } }
+@keyframes sway { from { transform: rotate(-84deg); } to { transform: rotate(-112deg); } }
+@keyframes runA { from { transform: rotate(-32deg); } to { transform: rotate(30deg); } }
+@keyframes runB { from { transform: rotate(30deg); } to { transform: rotate(-32deg); } }
 
 @media (max-width: 860px) {
   .s4, .s5, .s6, .s7, .s8 { grid-column: 1 / -1; }
@@ -332,7 +359,7 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
     if (!on) {
       stage.innerHTML = ''; layer.innerHTML = '';
       if (walking) { clearTimeout(walking.t); walking = null; }
-      document.querySelectorAll('.peek, .tape').forEach(function (x) { x.remove(); });
+      document.querySelectorAll('.stick, .tape, .spark').forEach(function (x) { x.remove(); });
     }
     else schedule(800);
   });
@@ -442,7 +469,9 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
     function frame(t) {
       var k = Math.min(1, (t - t0) / dur), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
       var a = path.getPointAtLength(e * L), b = path.getPointAtLength(Math.min(L, e * L + 1));
-      p.setAttribute('transform', 'translate(' + a.x + ' ' + a.y + ') rotate(' + (Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI) + ')');
+      // Point along the path, but keep the wheels down: when heading left, mirror vertically.
+      var ang = Math.atan2(b.y - a.y, b.x - a.x);
+      p.setAttribute('transform', 'translate(' + a.x + ' ' + a.y + ') rotate(' + (ang * 180 / Math.PI) + ')' + (Math.cos(ang) < 0 ? ' scale(1 -1)' : ''));
       if (k < 1 && s.isConnected) requestAnimationFrame(frame);
       else s.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 800 }).onfinish = function () { s.remove(); };
     }
@@ -453,26 +482,115 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
     return plots.filter(function (p) { var r = p.getBoundingClientRect(); return r.top > 80 && r.top < H() - 120 && r.width > 200; });
   }
 
-  function peek() {
-    var list = visiblePlots(); if (!list.length) return;
-    var plot = list[Math.floor(Math.random() * list.length)];
-    var hat = Math.random() < .6;
-    var wrap = document.createElement('div'); wrap.className = 'peek';
-    wrap.style.left = Math.round(rand(.1, .75) * (plot.clientWidth - 80)) + 'px';
+  /* ---------- stick figures ---------- */
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function pickPlot(minW) {
+    var list = visiblePlots().filter(function (p) { return !p.querySelector('.stick') && p.clientWidth >= (minW || 0); });
+    return list.length ? list[Math.floor(Math.random() * list.length)] : null;
+  }
+  function stick(plot, left, hat) {
+    var wrap = document.createElement('div'); wrap.className = 'stick';
+    wrap.style.left = Math.round(left) + 'px';
     var s = svg(
-      '<circle cx="39" cy="34" r="17" fill="#F5F3EE"></circle>' +
-      (hat ? '<path d="M21 30 Q39 8 57 30 Z" fill="' + ACCENT + '"></path><path d="M17 30 H61"></path>' : '<path d="M27 21 q6 -6 12 -2 q6 -5 12 2"></path>') +
-      '<g class="eyes"><circle cx="33" cy="35" r="2" fill="#111"></circle><circle cx="45" cy="35" r="2" fill="#111"></circle></g>' +
-      '<path d="M34 43 q5 3 10 0"></path>' +
-      '<path d="M8 70 q0 -8 6 -8 q6 0 6 8" fill="#F5F3EE"></path>' +
-      '<g class="wave"><path d="M58 70 q0 -8 6 -8 q6 0 6 8" fill="#F5F3EE"></path></g>',
-      '', '0 0 78 70');
+      '<g class="whole">' +
+        '<path class="dash" d="M-6 56 h-14 M-4 70 h-18 M-6 84 h-12" stroke-width="2.2"></path>' +
+        '<g class="legL"><path d="M42 76 L30 116"></path></g><g class="legR"><path d="M42 76 L54 116"></path></g>' +
+        '<path d="M42 35 V76"></path>' +
+        '<g class="armL"><path d="M42 46 L24 70"></path></g><g class="armR"><path d="M42 46 L60 70"></path></g>' +
+        '<circle cx="42" cy="21" r="14" fill="#F5F3EE"></circle>' +
+        (hat ? '<path d="M28 17 Q42 0 56 17 Z" fill="' + ACCENT + '"></path><path d="M24 17 H60"></path>' : '') +
+        '<g class="eyes"><circle cx="37" cy="21" r="2" fill="#111" stroke="none"></circle><circle cx="47" cy="21" r="2" fill="#111" stroke="none"></circle></g>' +
+        '<path class="smile" d="M37 27 q5 3 10 0" stroke-width="2.4"></path>' +
+        '<path class="grin" d="M33 25 q9 10 18 0" stroke-width="2.6"></path>' +
+      '</g>', '', '0 0 84 120');
     wrap.appendChild(s); plot.appendChild(wrap);
-    requestAnimationFrame(function () { requestAnimationFrame(function () { wrap.classList.add('up'); }); });
-    setTimeout(function () { wrap.classList.add('blink'); }, 1300);
-    setTimeout(function () { wrap.classList.remove('blink'); if (Math.random() < .6) wrap.classList.add('waving'); }, 1700);
-    setTimeout(function () { wrap.classList.remove('up'); }, 3700);
-    setTimeout(function () { wrap.remove(); }, 4600);
+    return { wrap: wrap, s: s, x: Math.round(left) };
+  }
+  function lift(st, from, to, dur, ease) {
+    return st.s.animate([{ transform: 'translateY(' + from + '%)' }, { transform: 'translateY(' + to + '%)' }], { duration: dur, easing: ease || 'cubic-bezier(.2,.8,.2,1)', fill: 'forwards' }).finished;
+  }
+  function hop(st, height, dur) {
+    return st.s.animate([{ transform: 'translateY(0%)' }, { transform: 'translateY(' + (-height) + '%)', offset: .45 }, { transform: 'translateY(0%)' }], { duration: dur || 520, easing: 'ease-in-out', fill: 'forwards' }).finished;
+  }
+  function jumpOut(st, from) {
+    st.wrap.classList.add('out');
+    return st.s.animate([{ transform: 'translateY(' + from + '%)' }, { transform: 'translateY(-38%)', offset: .5 }, { transform: 'translateY(0%)' }], { duration: 720, easing: 'cubic-bezier(.3,.7,.4,1)', fill: 'forwards' }).finished;
+  }
+  function runTo(st, dx, speed) {
+    var c = st.wrap.classList; c.add('running'); c.toggle('toL', dx < 0); c.remove('cheer', 'hiL', 'hiR', 'waving');
+    var a = st.wrap.animate([{ transform: 'translateX(' + (st.dx || 0) + 'px)' }, { transform: 'translateX(' + ((st.dx || 0) + dx) + 'px)' }], { duration: Math.abs(dx) / (speed || .5), easing: 'ease-in', fill: 'forwards' });
+    st.dx = (st.dx || 0) + dx;
+    return a.finished.then(function () { c.remove('running'); });
+  }
+  function offScreen(st, dir) {
+    var r = st.wrap.getBoundingClientRect();
+    return dir > 0 ? W() - r.left + 80 : -(r.right + 80);
+  }
+  function alive(st) { return on && st.wrap.isConnected; }
+
+  async function peekWave() {
+    var plot = pickPlot(); if (!plot) return;
+    var st = stick(plot, rand(.08, .8) * (plot.clientWidth - 84), Math.random() < .5);
+    await lift(st, 100, 50, 700);
+    st.wrap.classList.add('blink'); await sleep(450);
+    st.wrap.classList.remove('blink'); st.wrap.classList.add('happy', 'waving');
+    await sleep(1800); if (!alive(st)) return;
+    st.wrap.classList.remove('waving'); await sleep(250);
+    await lift(st, 50, 100, 520, 'ease-in'); st.wrap.remove();
+  }
+
+  async function jumpRun() {
+    var plot = pickPlot(); if (!plot) return;
+    var st = stick(plot, rand(.1, .75) * (plot.clientWidth - 84), Math.random() < .6);
+    await lift(st, 100, 60, 650);
+    st.wrap.classList.add('lookL'); await sleep(500);
+    st.wrap.classList.remove('lookL'); st.wrap.classList.add('lookR'); await sleep(500);
+    st.wrap.classList.remove('lookR'); st.wrap.classList.add('happy'); await sleep(250);
+    if (!alive(st)) return;
+    await jumpOut(st, 60);
+    st.wrap.classList.add('cheer'); await hop(st, 14, 480); await sleep(200);
+    if (!alive(st)) return;
+    var dir = Math.random() < .5 ? -1 : 1;
+    st.wrap.classList.add(dir < 0 ? 'lookL' : 'lookR');
+    await runTo(st, offScreen(st, dir), .62); st.wrap.remove();
+  }
+
+  async function hiFive() {
+    var plot = pickPlot(420); if (!plot) { return peekWave(); }
+    var w = plot.clientWidth, a = stick(plot, w * .12, true), b = stick(plot, w * .72, false);
+    lift(b, 100, 55, 700); await lift(a, 100, 55, 700);
+    a.wrap.classList.add('lookR'); b.wrap.classList.add('lookL'); await sleep(500);
+    a.wrap.classList.add('happy'); b.wrap.classList.add('happy');
+    jumpOut(b, 55); await jumpOut(a, 55);
+    if (!alive(a)) return;
+    var mid = (a.x + b.x) / 2, gap = 26;
+    runTo(b, (mid + gap) - b.x, .55); await runTo(a, (mid - gap) - a.x, .55);
+    a.wrap.classList.add('hiR'); b.wrap.classList.add('hiL'); await sleep(230);
+    var sp = document.createElementNS(NS, 'svg'); sp.setAttribute('class', 'spark'); sp.setAttribute('viewBox', '-30 -30 60 60');
+    sp.innerHTML = '<path d="M0 -12 V-26 M0 12 V26 M-12 0 H-26 M12 0 H26 M-9 -9 L-19 -19 M9 -9 L19 -19 M-9 9 L-19 19 M9 9 L19 19"></path>';
+    sp.style.left = (mid + 42) + 'px'; sp.style.top = '-' + Math.round(120 * .74) + 'px';
+    plot.appendChild(sp);
+    sp.animate([{ transform: 'scale(.3)', opacity: 1 }, { transform: 'scale(1.25)', opacity: 0 }], { duration: 620, easing: 'ease-out', fill: 'forwards' }).onfinish = function () { sp.remove(); };
+    await sleep(420);
+    a.wrap.classList.remove('hiR'); b.wrap.classList.remove('hiL');
+    a.wrap.classList.add('cheer'); b.wrap.classList.add('cheer');
+    hop(b, 16, 500); await hop(a, 16, 500);
+    if (!alive(a)) return;
+    a.wrap.classList.replace('lookR', 'lookL'); b.wrap.classList.replace('lookL', 'lookR');
+    runTo(b, offScreen(b, 1), .62).then(function () { b.wrap.remove(); });
+    await runTo(a, offScreen(a, -1), .62); a.wrap.remove();
+  }
+
+  async function popCheer() {
+    var plot = pickPlot(); if (!plot) return;
+    var st = stick(plot, rand(.1, .8) * (plot.clientWidth - 84), Math.random() < .5);
+    st.wrap.classList.add('out', 'happy', 'cheer');
+    await st.s.animate([{ transform: 'translateY(100%)' }, { transform: 'translateY(-30%)', offset: .6 }, { transform: 'translateY(0%)' }], { duration: 650, easing: 'cubic-bezier(.3,.7,.4,1)', fill: 'forwards' }).finished;
+    await hop(st, 18, 460); await hop(st, 12, 400);
+    if (!alive(st)) return;
+    st.wrap.classList.add('waving'); st.wrap.classList.remove('cheer'); await sleep(1100);
+    st.wrap.classList.remove('waving', 'out');
+    await lift(st, 0, 100, 560, 'ease-in'); st.wrap.remove();
   }
 
   function measure() {
@@ -491,17 +609,17 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
     setTimeout(function () { t.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 700, fill: 'forwards' }).onfinish = function () { t.remove(); }; }, 4200);
   }
 
-  window.doodle = { dog: dog, birds: birds, peek: peek, plane: plane, measure: measure };
-  var acts = [dog, birds, peek, plane, measure, peek, birds], last = -1, timer = null;
+  window.doodle = { dog: dog, birds: birds, plane: plane, measure: measure, peekWave: peekWave, jumpRun: jumpRun, hiFive: hiFive, popCheer: popCheer, stick: stick };
+  var acts = [peekWave, jumpRun, dog, hiFive, birds, popCheer, peekWave, plane, jumpRun, measure, hiFive, popCheer], last = -1, timer = null;
   function next() {
     timer = null;
     if (!on) return;
     if (!document.hidden) {
       var i; do { i = Math.floor(Math.random() * acts.length); } while (acts[i] === acts[last] && acts.length > 1);
       last = i;
-      try { acts[i](); } catch (e) {}
+      try { var r = acts[i](); if (r && r.catch) r.catch(function () {}); } catch (e) {}
     }
-    schedule(rand(5500, 10000));
+    schedule(rand(4500, 8500));
   }
   function schedule(ms) { if (timer) clearTimeout(timer); timer = setTimeout(next, ms); }
   if (on) { setTimeout(birds, 2200); schedule(6500); }
