@@ -11,6 +11,7 @@ The homepage of this portfolio, drawn as a civil engineer's site plan: every pro
   - the name rises into place and a dimension line draws itself;
   - plots sweep in as they scroll into view, with their icons drawing line by line;
   - hovering a plot lifts it with speed lines.
+- **A welcome on every visit:** an engineer in a hard hat slides out from behind the name, pulls a "Welcome!" board out of his toolbox, puts it back, and walks off behind the letters again.
 - **Line-art doodles at random:**
   - a spring-bodied dog that holds on to the page while you scroll and walks on when you stop;
   - flapping birds;

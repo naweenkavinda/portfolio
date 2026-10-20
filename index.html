@@ -175,6 +175,16 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
 .stick .dash { opacity: 0; }
 .stick.running .dash { opacity: 1; animation: flick .3s steps(2) infinite; }
 .stick.running.toL .dash { transform: translateX(126px); }
+/* the welcome engineer: slides out from behind the right edge of the name on every page load */
+.welcome { position: absolute; overflow: hidden; pointer-events: none; z-index: 4; }
+.welcome .who { position: absolute; left: 0; bottom: 0; transform: translateX(-110%); transform-origin: 50% 100%; }
+.welcome .who img { display: block; width: 100%; height: 100%; }
+.welcome .sign { position: absolute; left: 14%; top: 38%; width: 72%; box-sizing: border-box; padding: 6% 4% 5%; background: var(--paper); border: 3px solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink); text-align: center; opacity: 0; transform-origin: 20% 80%; }
+.welcome .sign b { display: block; font: 900 1em/1 var(--display); text-transform: uppercase; letter-spacing: .02em; }
+.welcome .sign small { display: block; margin-top: .35em; font: 500 .34em/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.welcome .rays { position: absolute; inset: -18px; border: 2px dashed var(--accent); opacity: 0; }
+.welcome.shine .rays { opacity: 1; animation: flick .4s steps(2) infinite; }
 .spark { position: absolute; width: 60px; height: 60px; margin: -30px 0 0 -30px; pointer-events: none; z-index: 4; overflow: visible;
   stroke: var(--accent); fill: none; stroke-width: 3; stroke-linecap: round; }
 .tape { position: absolute; left: 0; top: -22px; width: 100%; height: 20px; overflow: visible; pointer-events: none; z-index: 2; }
@@ -367,7 +377,7 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
     if (!on) {
       stage.innerHTML = ''; layer.innerHTML = '';
       if (walking) { clearTimeout(walking.t); walking = null; }
-      document.querySelectorAll('.stick, .tape, .spark').forEach(function (x) { x.remove(); });
+      document.querySelectorAll('.stick, .tape, .spark, .welcome').forEach(function (x) { x.remove(); });
     }
     else schedule(800);
   });
@@ -617,7 +627,62 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
     setTimeout(function () { t.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 700, fill: 'forwards' }).onfinish = function () { t.remove(); }; }, 4200);
   }
 
-  window.doodle = { dog: dog, birds: birds, plane: plane, measure: measure, peekWave: peekWave, jumpRun: jumpRun, hiFive: hiFive, popCheer: popCheer, stick: stick };
+  /* ---------- the welcome engineer: once on every page load, never as a random doodle ---------- */
+  async function welcome() {
+    var header = document.querySelector('header'), lines = document.querySelectorAll('h1 .ln > span');
+    if (!header || !lines.length) return;
+    var hr = header.getBoundingClientRect(), right = 0, top = Infinity, bottom = 0;
+    lines.forEach(function (sp) {
+      var rg = document.createRange(); rg.selectNodeContents(sp);
+      var r = rg.getBoundingClientRect(); right = Math.max(right, r.right); top = Math.min(top, r.top); bottom = Math.max(bottom, r.bottom);
+    });
+    if (bottom < 0 || top > H()) return;                           // only when the name is on screen
+    // Room to the right of the letters: up to the role text if it sits beside the name, else the header edge.
+    var roles = document.querySelector('.roles'), rr = roles && roles.getBoundingClientRect();
+    var limit = rr && rr.top < bottom && rr.left > right ? rr.left : hr.right;
+    var hgt = Math.min(270, (bottom - top) * 1.05, (limit - right - 24) / 0.97);
+    if (hgt < 96) return;
+    var wid = hgt * 220 / 226;
+    var wrap = document.createElement('div'); wrap.className = 'welcome';
+    wrap.style.cssText = 'left:' + (right - hr.left + 2) + 'px;top:' + (bottom - hr.top - hgt) + 'px;width:' + (wid + 30) + 'px;height:' + hgt + 'px';
+    wrap.innerHTML = '<div class="who" style="width:' + wid + 'px;height:' + hgt + 'px">' +
+      '<img src="assets/welcome-engineer.png" alt="" width="220" height="226">' +
+      '<div class="sign" style="font-size:' + Math.round(hgt * 0.15) + 'px"><span class="rays"></span><b>Welcome!</b><small>to my site plan</small></div>' +
+      '</div>';
+    header.appendChild(wrap);
+    var who = wrap.querySelector('.who'), sign = wrap.querySelector('.sign'), c = wrap.classList;
+    var ok = function () { return on && wrap.isConnected; };
+    function mv(el, frames, dur, ease) { return el.animate(frames, { duration: dur, easing: ease || 'cubic-bezier(.2,.8,.2,1)', fill: 'forwards' }).finished; }
+    function walk(from, to, dur) {   // slide with a little bounce in each step
+      var f = [], n = 6;
+      for (var k = 0; k <= n; k++) f.push({ transform: 'translateX(' + (from + (to - from) * k / n) + '%) translateY(' + (k % 2 ? -4 : 0) + '%) rotate(' + (k % 2 ? 2 : -2) + 'deg)' });
+      return mv(who, f, dur, 'linear');
+    }
+    var img = wrap.querySelector('img');
+    if (!img.complete) await new Promise(function (r) { img.onload = img.onerror = r; });
+
+    await mv(who, [{ transform: 'translateX(-110%) rotate(0deg)' }, { transform: 'translateX(-58%) rotate(9deg)' }], 800);   // peeks out from behind the letters
+    await mv(who, [{ transform: 'translateX(-58%) rotate(9deg)' }, { transform: 'translateX(-58%) rotate(3deg)' }, { transform: 'translateX(-58%) rotate(9deg)' }], 700, 'ease-in-out');
+    if (!ok()) return;
+    await walk(-58, 6, 900);                                         // steps out beside the name
+    await mv(who, [{ transform: 'translateX(6%) translateY(0)' }, { transform: 'translateX(6%) translateY(-7%)' }, { transform: 'translateX(6%) translateY(0)' }], 420, 'ease-in-out');
+    if (!ok()) return;
+    // the welcome board pops out of his toolbox
+    await mv(sign, [{ transform: 'translate(-28%, 55%) scale(.12) rotate(-20deg)', opacity: 0 }, { transform: 'translate(0, -8%) scale(1.08) rotate(3deg)', opacity: 1, offset: .7 }, { transform: 'none', opacity: 1 }], 700);
+    c.add('shine');
+    sign.animate([{ transform: 'rotate(-2.5deg)' }, { transform: 'rotate(2.5deg)' }], { duration: 560, iterations: 5, direction: 'alternate', easing: 'ease-in-out' });
+    who.animate([{ transform: 'translateX(6%) translateY(0)' }, { transform: 'translateX(6%) translateY(-3%)' }], { duration: 280, iterations: 10, direction: 'alternate', easing: 'ease-in-out' });
+    await sleep(2900);
+    if (!ok()) return;
+    c.remove('shine');
+    // back into the toolbox it goes
+    await mv(sign, [{ transform: 'none', opacity: 1 }, { transform: 'translate(-28%, 55%) scale(.12) rotate(-20deg)', opacity: 0 }], 550, 'ease-in');
+    await mv(who, [{ transform: 'translateX(6%) rotate(0deg)' }, { transform: 'translateX(6%) rotate(-6deg)' }, { transform: 'translateX(6%) rotate(0deg)' }], 600, 'ease-in-out');
+    await walk(6, -112, 1100);                                       // and walks back behind the name
+    wrap.remove();
+  }
+
+  window.doodle = { welcome: welcome, dog: dog, birds: birds, plane: plane, measure: measure, peekWave: peekWave, jumpRun: jumpRun, hiFive: hiFive, popCheer: popCheer, stick: stick };
   var acts = [peekWave, jumpRun, dog, hiFive, birds, popCheer, peekWave, plane, jumpRun, measure, hiFive, popCheer], last = -1, timer = null;
   function next() {
     timer = null;
@@ -630,7 +695,10 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
     schedule(rand(4500, 8500));
   }
   function schedule(ms) { if (timer) clearTimeout(timer); timer = setTimeout(next, ms); }
-  if (on) { setTimeout(birds, 2200); schedule(6500); }
+  if (on) {
+    setTimeout(function () { welcome().catch(function () {}); }, 1500);   // every page load, reloads included
+    schedule(13000);
+  }
 })();
 </script>
 </body>
