@@ -42,7 +42,10 @@ This repo is a living portfolio of things I've built: internal tools, calculator
 
 ## Contact
 
-- **Email:** naweenkavinda95@gmail.com
+**Available for freelance work:** web apps, dashboards, internal tools and automations.
+
+- **WhatsApp:** [Chat with me](https://wa.me/94766773164?text=Hi%20Naween!%20I%20found%20your%20portfolio%20and%20I'd%20like%20to%20talk%20about%20a%20freelance%20project.)
+- **Email:** naweenkavinda95@gmail.com. Send your project details and I'll build it for you.
 
 ---
 

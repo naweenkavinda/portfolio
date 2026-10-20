@@ -6,6 +6,13 @@
 README.md          EMAIL     ^naweenkavinda95@gmail\.com$
 index.html         EMAIL     ^naweenkavinda95@gmail\.com$
 
+# My WhatsApp for freelance enquiries: published on purpose on the homepage and main
+# README only (owner's decision, 21 Oct 2026). Still blocked in every other file.
+index.html         PHONE_LK  ^94766773164$
+index.html         DENY#15
+README.md          PHONE_LK  ^94766773164$
+README.md          DENY#15
+
 # Placeholder addresses and numbers used in demos.
 *                  EMAIL     @example\.(com|org|net)$
 projects/visitor-checkin/*  EMAIL  ^(you|name)@company\.com$
