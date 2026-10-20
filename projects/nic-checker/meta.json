@@ -1,0 +1,16 @@
+{
+    "order":  4,
+    "emoji":  "🪪",
+    "icon":  "idcard",
+    "kind":  "live",
+    "title":  "NIC Checker",
+    "summary":  "Builds, checks and converts Sri Lankan NIC numbers (old and 12-digit formats) with the check-digit working shown",
+    "blurb":  "Builds, checks and converts Sri Lankan NIC numbers in both the old and the 12-digit formats, with the check-digit working shown.",
+    "tech":  [
+                 "HTML",
+                 "CSS",
+                 "JavaScript"
+             ],
+    "demoLabel":  "Open tool",
+    "tableLabel":  "Open"
+}

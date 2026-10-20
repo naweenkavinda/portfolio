@@ -1,0 +1,16 @@
+{
+    "order":  1,
+    "emoji":  "🏠",
+    "icon":  "house",
+    "kind":  "live",
+    "title":  "KGR House",
+    "summary":  "Interactive 3D walkable house model built from a real floor plan",
+    "blurb":  "An interactive 3D house you can walk through, modelled from a real floor plan, with procedural materials, palms and mango trees.",
+    "tech":  [
+                 "Three.js",
+                 "HTML",
+                 "JavaScript"
+             ],
+    "demoLabel":  "Open 3D model",
+    "tableLabel":  "Open"
+}

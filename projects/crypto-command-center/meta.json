@@ -1,0 +1,16 @@
+{
+    "order":  2,
+    "emoji":  "📈",
+    "icon":  "chart",
+    "kind":  "snapshot",
+    "title":  "Crypto Command Center",
+    "summary":  "Crypto market dashboard with a Sri Lanka VASP regulation tracker and stakeholder map",
+    "blurb":  "A crypto market dashboard with a Sri Lanka virtual-asset regulation tracker, legislative timeline and stakeholder map.",
+    "tech":  [
+                 "d3.js",
+                 "JavaScript",
+                 "HTML"
+             ],
+    "demoLabel":  "Open dashboard",
+    "tableLabel":  "Open"
+}

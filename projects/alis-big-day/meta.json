@@ -1,0 +1,18 @@
+{
+    "order":  7,
+    "emoji":  "🐘",
+    "icon":  "elephant",
+    "kind":  "live",
+    "title":  "Ali\u0027s Big Day",
+    "summary":  "15-page interactive storybook that builds thinking skills and hand-eye coordination for ages 3–6",
+    "blurb":  "A 15-page interactive storybook for children aged 3–6, building thinking skills and hand-eye coordination through tracing, counting and puzzles.",
+    "tech":  [
+                 "HTML",
+                 "CSS",
+                 "JavaScript",
+                 "SVG",
+                 "Web Audio"
+             ],
+    "demoLabel":  "Play",
+    "tableLabel":  "Play"
+}

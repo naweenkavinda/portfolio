@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Naween Kavinda · Portfolio</title>
+<meta name="description" content="Tools, dashboards and web apps built by Naween Kavinda: project manager, business developer and civil engineer working in crypto and fintech.">
+<meta name="theme-color" content="#0a1626">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a drafting sheet. Title block on top, project "sheets" in a responsive grid, a revision strip at the foot. Deliberately one dark blueprint theme. */
+:root {
+  color-scheme: dark;
+  --paper: #0a1626;
+  --sheet: #0f2036;
+  --sheet-hi: #132944;
+  --line: #24476f;
+  --grid: rgba(120, 180, 255, .07);
+  --ink: #e8f0fb;
+  --ink-2: #9db3cf;
+  --ink-3: #6a83a3;
+  --cyan: #6fd3ff;
+  --amber: #ffb547;
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    linear-gradient(rgba(120,180,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120,180,255,.035) 1px, transparent 1px);
+  background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
+  color: var(--ink);
+  font: 400 16px/1.55 var(--body);
+  padding-inline: max(16px, env(safe-area-inset-left, 0px));
+  padding-block: max(24px, env(safe-area-inset-top, 0px)) max(32px, env(safe-area-inset-bottom, 0px));
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 1160px; margin: 0 auto; display: grid; gap: 28px; }
+
+/* ---------- title block ---------- */
+.titleblock {
+  border: 1.5px solid var(--line);
+  background: rgba(15, 32, 54, .82);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+.tb-main { padding: 28px 28px 24px; display: grid; gap: 10px; min-width: 0; }
+.tb-label { font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+h1 {
+  margin: 0;
+  font: 700 clamp(44px, 8vw, 84px)/.92 var(--display);
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+h1 span { color: var(--cyan); }
+.roles { margin: 0; font: 600 clamp(17px, 2.4vw, 22px)/1.2 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--amber); }
+.about { margin: 4px 0 0; max-width: 62ch; color: var(--ink-2); }
+.tb-side { border-left: 1.5px solid var(--line); display: grid; grid-template-rows: repeat(4, auto); min-width: 220px; }
+.tb-cell { padding: 12px 18px; border-bottom: 1px solid var(--line); display: grid; gap: 4px; }
+.tb-cell:last-child { border-bottom: 0; }
+.tb-cell b { font: 500 15px/1.3 var(--mono); color: var(--ink); overflow-wrap: anywhere; }
+.tb-cell a { text-decoration-color: var(--ink-3); text-underline-offset: 3px; }
+.tb-cell a:hover { color: var(--cyan); }
+@media (max-width: 760px) {
+  .titleblock { grid-template-columns: 1fr; }
+  .tb-side { border-left: 0; border-top: 1.5px solid var(--line); grid-template-columns: 1fr 1fr; grid-template-rows: none; min-width: 0; }
+  .tb-cell:nth-child(odd) { border-right: 1px solid var(--line); }
+  .tb-cell:nth-last-child(-n+2) { border-bottom: 0; }
+  .tb-main { padding: 22px 18px 18px; }
+}
+
+/* ---------- section heading ---------- */
+.sechead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-bottom: 1.5px solid var(--line); padding-bottom: 10px; }
+.sechead h2 { margin: 0; font: 700 28px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; }
+.sechead p { margin: 0; font: 400 13px/1.4 var(--mono); color: var(--ink-3); }
+
+/* ---------- project sheets ---------- */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 18px; }
+.card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: var(--sheet);
+  border: 1.5px solid var(--line);
+  min-width: 0;
+  transition: border-color .2s, transform .2s, background-color .2s;
+}
+.card:hover { border-color: var(--cyan); background: var(--sheet-hi); transform: translateY(-3px); }
+.card::before, .card::after { content: ""; position: absolute; width: 12px; height: 12px; border-color: var(--amber); border-style: solid; opacity: .9; }
+.card::before { top: -1.5px; left: -1.5px; border-width: 2px 0 0 2px; }
+.card::after { bottom: -1.5px; right: -1.5px; border-width: 0 2px 2px 0; }
+.art { height: 150px; border-bottom: 1px dashed var(--line); display: grid; place-items: center; position: relative; overflow: hidden; }
+.art svg { width: 116px; height: 116px; stroke: var(--cyan); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .35s; }
+.card:hover .art svg { transform: scale(1.06); }
+.art .dwg { position: absolute; left: 12px; top: 10px; font: 500 11px/1 var(--mono); letter-spacing: .12em; color: var(--ink-3); }
+.art .kind { position: absolute; right: 10px; top: 8px; font: 600 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 4px 8px; border: 1px solid currentColor; color: var(--amber); }
+.art .kind.live { color: #7ee2a8; }
+.body { padding: 16px 18px 6px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.body h3 { margin: 0; font: 700 26px/1.02 var(--display); letter-spacing: .03em; text-transform: uppercase; text-wrap: balance; }
+.body p { margin: 0; color: var(--ink-2); font-size: 15px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.tags span { font: 500 12px/1 var(--mono); padding: 5px 7px; color: var(--ink-2); background: rgba(111, 211, 255, .07); border: 1px solid rgba(111, 211, 255, .18); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 18px 18px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 44px; padding: 10px 16px;
+  font: 600 15px/1 var(--body); text-decoration: none;
+  border: 1.5px solid var(--line); color: var(--ink);
+  transition: background-color .15s, border-color .15s, color .15s;
+}
+.btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.btn.primary { background: var(--cyan); border-color: var(--cyan); color: #04121f; }
+.btn.primary:hover { background: #a6e5ff; border-color: #a6e5ff; }
+.btn:not(.primary):hover { border-color: var(--cyan); color: var(--cyan); }
+
+/* ---------- foot ---------- */
+.revs { border: 1.5px solid var(--line); background: rgba(15, 32, 54, .82); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+.revs div { padding: 14px 18px; border-right: 1px solid var(--line); display: grid; gap: 4px; }
+.revs div:last-child { border-right: 0; }
+.revs b { font: 500 14px/1.4 var(--mono); }
+.revs span.tb-label + b a { text-underline-offset: 3px; }
+@media (max-width: 520px) { .revs div { border-right: 0; border-bottom: 1px solid var(--line); } .revs div:last-child { border-bottom: 0; } }
+
+@media (prefers-reduced-motion: reduce) { .card, .art svg { transition: none; } .card:hover { transform: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="titleblock">
+    <div class="tb-main">
+      <span class="tb-label">Portfolio · Drawing set</span>
+      <h1>Naween <span>Kavinda</span></h1>
+      <p class="roles">Project Manager · Business Developer · Civil Engineer</p>
+      <p class="about">I build tools and projects at the intersection of fintech, crypto and operations. My background spans civil engineering, business development and project management, so I think in systems, whether it's a payment flow or a construction timeline.</p>
+    </div>
+    <div class="tb-side">
+      <div class="tb-cell"><span class="tb-label">Field</span><b>Crypto &amp; fintech</b></div>
+      <div class="tb-cell"><span class="tb-label">Base</span><b>Sri Lanka</b></div>
+      <div class="tb-cell"><span class="tb-label">Email</span><b style="font-size:13px"><a href="mailto:naweenkavinda95@gmail.com">naweenkavinda95@gmail.com</a></b></div>
+      <div class="tb-cell"><span class="tb-label">Source</span><b><a href="https://github.com/naweenkavinda/portfolio" target="_blank" rel="noopener">GitHub repo ↗</a></b></div>
+    </div>
+  </header>
+
+  <section aria-labelledby="projects-h" style="display:grid;gap:18px">
+    <div class="sechead">
+      <h2 id="projects-h">Projects</h2>
+      <p>Every demo opens in a new tab</p>
+      <!-- The cards between CARDS:START and CARDS:END are generated from projects/ by .github/scripts/build-portfolio.ps1 -->
+
+    </div>
+
+    <div class="grid">
+<!-- CARDS:START -->
+      <article class="card">
+        <div class="art">
+          <span class="dwg">DWG-01</span><span class="kind live">Live</span>
+          <svg viewBox="0 0 120 120" aria-hidden="true"><path d="M14 58 60 22l46 36"/><path d="M24 50v52h72V50"/><path d="M50 102V74h20v28"/><rect x="32" y="62" width="12" height="12"/><rect x="76" y="62" width="12" height="12"/><path d="M8 108h104" stroke-dasharray="4 4"/><path d="M78 30v-8h10v16"/></svg>
+        </div>
+        <div class="body">
+          <h3>KGR House</h3>
+          <p>An interactive 3D house you can walk through, modelled from a real floor plan, with procedural materials, palms and mango trees.</p>
+          <div class="tags"><span>Three.js</span><span>HTML</span><span>JavaScript</span></div>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="projects/kgr-house/" target="_blank" rel="noopener">Open 3D model <svg viewBox="0 0 16 16"><path d="M6 3h7v7M13 3 4 12"/></svg></a>
+          <a class="btn" href="https://github.com/naweenkavinda/portfolio/tree/main/projects/kgr-house" target="_blank" rel="noopener">Details</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="art">
+          <span class="dwg">DWG-02</span><span class="kind">Snapshot</span>
+          <svg viewBox="0 0 120 120" aria-hidden="true"><rect x="12" y="16" width="96" height="88"/><path d="M12 34h96"/><path d="M22 86l16-18 14 10 18-26 14 12 14-18"/><circle cx="84" cy="64" r="3"/><path d="M22 26h22M54 26h10"/><path d="M22 96h76" stroke-dasharray="3 5"/></svg>
+        </div>
+        <div class="body">
+          <h3>Crypto Command Center</h3>
+          <p>A crypto market dashboard with a Sri Lanka virtual-asset regulation tracker, legislative timeline and stakeholder map.</p>
+          <div class="tags"><span>d3.js</span><span>JavaScript</span><span>HTML</span></div>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="projects/crypto-command-center/" target="_blank" rel="noopener">Open dashboard <svg viewBox="0 0 16 16"><path d="M6 3h7v7M13 3 4 12"/></svg></a>
+          <a class="btn" href="https://github.com/naweenkavinda/portfolio/tree/main/projects/crypto-command-center" target="_blank" rel="noopener">Details</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="art">
+          <span class="dwg">DWG-03</span><span class="kind">Demo</span>
+          <svg viewBox="0 0 120 120" aria-hidden="true"><rect x="10" y="20" width="30" height="80"/><rect x="45" y="20" width="30" height="80"/><rect x="80" y="20" width="30" height="80"/><rect x="15" y="30" width="20" height="14"/><rect x="15" y="50" width="20" height="14"/><rect x="50" y="30" width="20" height="14"/><rect x="85" y="30" width="20" height="14"/><rect x="85" y="50" width="20" height="14"/><rect x="85" y="70" width="20" height="14"/></svg>
+        </div>
+        <div class="body">
+          <h3>Work Command Center</h3>
+          <p>A team and personal action-item board with kanban and team views, category filters and live stats.</p>
+          <div class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="projects/work-command-center/" target="_blank" rel="noopener">Open demo <svg viewBox="0 0 16 16"><path d="M6 3h7v7M13 3 4 12"/></svg></a>
+          <a class="btn" href="https://github.com/naweenkavinda/portfolio/tree/main/projects/work-command-center" target="_blank" rel="noopener">Details</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="art">
+          <span class="dwg">DWG-04</span><span class="kind live">Live</span>
+          <svg viewBox="0 0 120 120" aria-hidden="true"><rect x="14" y="28" width="92" height="62" rx="4"/><circle cx="40" cy="54" r="10"/><path d="M26 78c3-8 9-12 14-12s11 4 14 12"/><path d="M62 48h32M62 60h26M62 72h32"/><path d="M14 98h92" stroke-dasharray="3 5"/></svg>
+        </div>
+        <div class="body">
+          <h3>NIC Checker</h3>
+          <p>Builds, checks and converts Sri Lankan NIC numbers in both the old and the 12-digit formats, with the check-digit working shown.</p>
+          <div class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="projects/nic-checker/" target="_blank" rel="noopener">Open tool <svg viewBox="0 0 16 16"><path d="M6 3h7v7M13 3 4 12"/></svg></a>
+          <a class="btn" href="https://github.com/naweenkavinda/portfolio/tree/main/projects/nic-checker" target="_blank" rel="noopener">Details</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="art">
+          <span class="dwg">DWG-05</span><span class="kind">Demo</span>
+          <svg viewBox="0 0 120 120" aria-hidden="true"><path d="M30 104V18h60v86"/><path d="M22 104h76"/><circle cx="78" cy="62" r="3"/><rect x="42" y="30" width="36" height="24"/><path d="M48 40h24M48 46h16"/></svg>
+        </div>
+        <div class="body">
+          <h3>Visitor Check-in System</h3>
+          <p>A tablet check-in kiosk for an office entrance, with validation, a progress bar and a digital visitor pass. It keeps a visitor log for physical security.</p>
+          <div class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="projects/visitor-checkin/" target="_blank" rel="noopener">Open demo <svg viewBox="0 0 16 16"><path d="M6 3h7v7M13 3 4 12"/></svg></a>
+          <a class="btn" href="https://github.com/naweenkavinda/portfolio/tree/main/projects/visitor-checkin" target="_blank" rel="noopener">Details</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="art">
+          <span class="dwg">DWG-06</span><span class="kind">Demo</span>
+          <svg viewBox="0 0 120 120" aria-hidden="true"><path d="M60 26v72"/><path d="M60 26c-14-8-30-8-44-2v72c14-6 30-6 44 2"/><path d="M60 26c14-8 30-8 44-2v72c-14-6-30-6-44 2"/><path d="M26 42c8-3 16-3 24 0M26 54c8-3 16-3 24 0M70 42c8-3 16-3 24 0"/></svg>
+        </div>
+        <div class="body">
+          <h3>Bitcoin Pelahara Book Shop</h3>
+          <p>An order page for a Sinhala Bitcoin book: a photo gallery, delivery options, dynamic pricing and serverless order emails.</p>
+          <div class="tags"><span>HTML</span><span>Python</span><span>OpenCV</span><span>FormSubmit</span></div>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="projects/book-shop/" target="_blank" rel="noopener">Open demo <svg viewBox="0 0 16 16"><path d="M6 3h7v7M13 3 4 12"/></svg></a>
+          <a class="btn" href="https://comforting-gumption-b35bdf.netlify.app" target="_blank" rel="noopener">Real shop <svg viewBox="0 0 16 16"><path d="M6 3h7v7M13 3 4 12"/></svg></a>
+          <a class="btn" href="https://github.com/naweenkavinda/portfolio/tree/main/projects/book-shop" target="_blank" rel="noopener">Details</a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="art">
+          <span class="dwg">DWG-07</span><span class="kind live">Live</span>
+          <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="56" r="26"/><ellipse cx="28" cy="52" rx="14" ry="18"/><ellipse cx="92" cy="52" rx="14" ry="18"/><path d="M54 64c-2 12-2 22 4 28 4 4 10 2 10-4"/><circle cx="50" cy="50" r="2.5"/><circle cx="70" cy="50" r="2.5"/><path d="M46 34c8-10 20-10 28 0"/></svg>
+        </div>
+        <div class="body">
+          <h3>Ali's Big Day</h3>
+          <p>A 15-page interactive storybook for children aged 3–6, building thinking skills and hand-eye coordination through tracing, counting and puzzles.</p>
+          <div class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>SVG</span><span>Web Audio</span></div>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="projects/alis-big-day/" target="_blank" rel="noopener">Play <svg viewBox="0 0 16 16"><path d="M6 3h7v7M13 3 4 12"/></svg></a>
+          <a class="btn" href="https://github.com/naweenkavinda/portfolio/tree/main/projects/alis-big-day" target="_blank" rel="noopener">Details</a>
+        </div>
+      </article>
+     
+<!-- CARDS:END -->
+    </div>
+  </section>
+
+  <footer class="revs">
+    <div><span class="tb-label">Sheets</span><b><!-- COUNT -->7 projects<!-- /COUNT --></b></div>
+    <div><span class="tb-label">Built with</span><b>HTML · CSS · JS · Python</b></div>
+    <div><span class="tb-label">Demos</span><b>Nothing you enter is sent</b></div>
+    <div><span class="tb-label">Contact</span><b><a href="mailto:naweenkavinda95@gmail.com">Email me</a></b></div>
+  </footer>
+
+</div>
+</body>
+</html>

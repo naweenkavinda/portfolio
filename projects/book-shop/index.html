@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="si">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>බිට්කොයින් පෙළහර – Order online</title>
+<meta name="description" content="Bitcoin Pelahara – Vijay Boyapati's book in Sinhala, translated by CeylonCash. Island-wide delivery, cash on delivery or card.">
+<meta property="og:title" content="බිට්කොයින් පෙළහර – Bitcoin Pelahara">
+<meta property="og:description" content="Sinhala translation by CeylonCash. Island-wide delivery · Cash on delivery or card.">
+<meta property="og:image" content="img/share.jpg">
+<meta property="og:type" content="product">
+<link rel="icon" href="img/book-cover-thumb.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Sinhala:wght@600;800&family=Noto+Sans+Sinhala:wght@400;600&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark:#1d1715; --dark2:#2a211d; --cream:#f6efe6; --card:#fffdf9; --ink:#1f1b16; --muted:#6b6258;
+    --on-dark:#f4ebe0; --on-dark-muted:#c9b8a8; --accent:#c96b3a; --accent-d:#a9552b; --line:#e6ddd0; --err:#b42a2a;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,"Noto Sans Sinhala",system-ui,sans-serif;line-height:1.6}
+  .si{font-family:"Noto Sans Sinhala",Inter,sans-serif}
+  img{max-width:100%;display:block}
+
+  /* ---------- top bar ---------- */
+  .bar{background:var(--dark);color:var(--on-dark-muted);font-size:13px;text-align:center;padding:8px 16px;border-bottom:1px solid #3a2f2a}
+
+  /* ---------- hero ---------- */
+  .hero{background:radial-gradient(120% 90% at 30% 40%,#3b2d26 0%,var(--dark) 60%);color:var(--on-dark)}
+  .hero .in{max-width:1120px;margin:0 auto;padding:40px 16px 56px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:48px;align-items:center}
+  .gallery .main{border-radius:16px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.7);aspect-ratio:1/1;background:#2a201c}
+  .gallery .main img{width:100%;height:100%;object-fit:cover;transition:opacity .25s}
+  .thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+  .thumbs button{padding:0;border:2px solid transparent;border-radius:10px;overflow:hidden;background:none;cursor:pointer;opacity:.7;transition:.2s}
+  .thumbs button[aria-current="true"],.thumbs button:hover{opacity:1;border-color:var(--accent)}
+  .kicker{display:inline-block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:12px}
+  h1{font-family:"Noto Serif Sinhala",serif;font-weight:800;font-size:clamp(36px,5.4vw,58px);line-height:1.25;margin:0}
+  .en-title{font-family:Fraunces,serif;font-size:20px;color:var(--on-dark-muted);margin:6px 0 18px}
+  .byline{font-size:15px;color:var(--on-dark-muted);margin:0 0 22px}
+  .byline b{color:var(--on-dark);font-weight:600}
+  .desc{font-size:16.5px;margin:0 0 12px;max-width:52ch}
+  .desc-en{font-size:15px;color:var(--on-dark-muted);margin:0 0 26px;max-width:56ch}
+  .buy{display:flex;flex-wrap:wrap;align-items:center;gap:18px 24px}
+  .price{font-family:Fraunces,serif;font-size:40px;line-height:1}
+  .price small{display:block;font-family:Inter,sans-serif;font-size:13px;color:var(--on-dark-muted);margin-top:6px}
+  .btn{appearance:none;border:0;background:var(--accent);color:#fff;font:600 16px Inter,sans-serif;padding:15px 26px;border-radius:12px;cursor:pointer;text-decoration:none;display:inline-block;text-align:center;transition:background .2s}
+  .btn:hover{background:var(--accent-d)}
+  .price .was{font-size:22px;color:var(--on-dark-muted);text-decoration:line-through;margin-right:10px;font-weight:600}
+  .save{display:inline-block;background:#3d2a20;color:#f2b38e;border:1px solid #5a3a2a;font:600 12px Inter,sans-serif;padding:3px 9px;border-radius:999px;vertical-align:middle;margin-left:4px}
+  .btn.ghost{background:transparent;border:1.5px solid #6a5246;color:var(--on-dark)}
+  .btn.ghost:hover{background:#2e2420;border-color:var(--accent)}
+  .wa{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+  .wa svg{width:18px;height:18px;flex:none}
+  .fab{position:fixed;right:16px;bottom:16px;z-index:10;background:#25d366;color:#fff;border-radius:999px;padding:12px 18px;font:600 15px Inter,sans-serif;text-decoration:none;box-shadow:0 10px 24px -8px rgba(0,0,0,.45)}
+  .fab:hover{background:#1ebe5a}
+  .pickup-info{background:#f7efe6;border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:14.5px}
+  .is-hidden{display:none !important}
+  .perks{list-style:none;padding:0;margin:28px 0 0;display:grid;grid-template-columns:repeat(3,auto);gap:10px 22px;font-size:13.5px;color:var(--on-dark-muted)}
+  .perks li::before{content:"✓";color:var(--accent);font-weight:700;margin-right:6px}
+
+  /* ---------- order ---------- */
+  .order{max-width:760px;margin:-28px auto 0;padding:0 16px 56px;position:relative}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:32px;box-shadow:0 20px 50px -30px rgba(40,25,15,.35)}
+  h2{font-family:Fraunces,serif;font-size:28px;margin:0 0 4px}
+  .sub{color:var(--muted);margin:0 0 24px;font-size:15px}
+  form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .full{grid-column:1/-1}
+  label{display:block;font-size:14px;font-weight:500;margin-bottom:6px}
+  input,textarea,select{width:100%;font:inherit;padding:12px 13px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+  input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  textarea{min-height:84px;resize:vertical}
+  .pay{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+  .opt{position:relative;border:1.5px solid var(--line);border-radius:12px;padding:14px 14px 14px 44px;cursor:pointer;background:#fff}
+  .opt input{position:absolute;left:14px;top:17px;width:18px;height:18px;accent-color:var(--accent)}
+  .opt strong{display:block;font-weight:600}
+  .opt span{font-size:13px;color:var(--muted)}
+  .opt:has(input:checked){border-color:var(--accent);background:#fbf1ea}
+  .summary{display:flex;justify-content:space-between;align-items:center;border-top:1px dashed var(--line);padding-top:16px;font-size:15px}
+  .summary b{font-family:Fraunces,serif;font-size:26px}
+  .full .btn{width:100%}
+  .btn:disabled{opacity:.6;cursor:wait}
+  .msg{display:none;padding:18px;border-radius:12px}
+  .msg.ok{display:block;background:#eaf5ee;border:1px solid #bfe0cb}
+  .msg.err{display:block;background:#fbeaea;border:1px solid #efc4c4;color:var(--err)}
+  .msg h3{margin:0 0 6px;font-family:Fraunces,serif}
+  .hp{display:none}
+  footer{text-align:center;color:var(--muted);font-size:13px;padding:0 16px 40px}
+  footer a{color:var(--accent-d)}
+
+  @media (max-width:860px){
+    .hero .in{grid-template-columns:1fr;gap:28px;padding-top:24px}
+    .perks{grid-template-columns:1fr 1fr}
+    form{grid-template-columns:1fr}
+    .card{padding:22px}
+    .order{margin-top:-20px}
+  }
+</style>
+</head>
+<body>
+
+<div id="demoNote" style="display:none;position:sticky;top:0;z-index:50;padding:8px 16px;text-align:center;background:#EB7400;color:#fff;font:600 13px/1.4 Inter,system-ui,sans-serif">Portfolio demo: orders here are not sent. <a href="https://comforting-gumption-b35bdf.netlify.app" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline">Visit the real shop</a></div>
+<script>if (/\.github\.io$/i.test(location.hostname)) document.getElementById('demoNote').style.display = 'block';</script>
+
+<div class="bar" id="topbar"></div>
+
+<section class="hero">
+  <div class="in">
+    <div class="gallery">
+      <div class="main"><img id="mainImg" src="img/book-cover.jpg" alt="බිට්කොයින් පෙළහර book cover"></div>
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+
+    <div>
+      <span class="kicker">Now in Sinhala</span>
+      <h1 id="title"></h1>
+      <p class="en-title" id="enTitle"></p>
+      <p class="byline">by <b id="author"></b> · translated by <b id="translator"></b></p>
+      <p class="desc si" id="desc"></p>
+      <p class="desc-en" id="descEn"></p>
+      <div class="buy">
+        <div class="price"><span id="price"></span><small id="deliveryNote"></small></div>
+        <a class="btn" href="#order">Order now</a>
+        <a class="btn ghost wa contact-wa" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3Z"/></svg>Contact us</a>
+      </div>
+      <ul class="perks">
+        <li>Island-wide delivery</li>
+        <li>Cash on delivery</li>
+        <li>Pick up in Colombo 7</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="order" id="order">
+  <div class="card">
+    <h2>Place your order</h2>
+    <p class="sub si">ඔබගේ විස්තර පහතින් ඇතුළත් කරන්න. අපි ඔබව අමතා ඇණවුම තහවුරු කරන්නෙමු.</p>
+    <form id="orderForm" novalidate>
+      <div class="full">
+        <label for="name">Full name *</label>
+        <input id="name" name="Name" required autocomplete="name">
+      </div>
+      <div>
+        <label for="phone">Phone / WhatsApp *</label>
+        <input id="phone" name="Phone" required inputmode="tel" autocomplete="tel" placeholder="07X XXX XXXX">
+      </div>
+      <div>
+        <label for="email">Email (optional)</label>
+        <input id="email" name="email" type="email" autocomplete="email">
+      </div>
+      <div class="full">
+        <label>How would you like to get the book? *</label>
+        <div class="pay" id="payOptions"></div>
+      </div>
+      <div class="full pickup-info is-hidden" id="pickupInfo"></div>
+      <div class="full delivery-only">
+        <label for="address">Delivery address *</label>
+        <textarea id="address" name="Address" required autocomplete="street-address" placeholder="House no, street, area"></textarea>
+      </div>
+      <div class="delivery-only">
+        <label for="city">City / Town *</label>
+        <input id="city" name="City" required autocomplete="address-level2">
+      </div>
+      <div>
+        <label for="qty">Number of copies</label>
+        <select id="qty" name="Quantity"></select>
+      </div>
+
+
+      <div class="full">
+        <label for="note">Note (optional)</label>
+        <input id="note" name="Note" placeholder="e.g. gift message, best time to call">
+      </div>
+
+      <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off">
+
+      <div class="full summary">
+        <span id="totalLabel">Total (incl. delivery)</span>
+        <b id="total"></b>
+      </div>
+      <div class="full">
+        <button class="btn" type="submit" id="submitBtn">Place order</button>
+      </div>
+      <div class="full msg" id="msg"></div>
+    </form>
+  </div>
+</section>
+
+<footer id="fine"></footer>
+<a class="fab wa contact-wa" href="#" target="_blank" rel="noopener" aria-label="Contact us on WhatsApp">💬 Contact us</a>
+
+<script>
+/* =====================================================================
+   ✏️  EDIT ONLY THIS BOX  — change the text between the quotes.
+   ===================================================================== */
+const SHOP = {
+  bookTitle:   "බිට්කොයින් පෙළහර",
+  englishTitle:"Bitcoin Pelahara",
+  author:      "Vijay Boyapati",
+  translator:  "CeylonCash",
+  description: "විජේ බෝයපතිගේ ලොව පුරා ප්‍රසිද්ධ “The Bullish Case for Bitcoin” කෘතියේ සිංහල පරිවර්තනය. බිට්කොයින් යනු කුමක්ද, එයට වටිනාකමක් ලැබෙන්නේ ඇයි සහ මුදල්වල අනාගතය වෙනස් විය හැක්කේ කෙසේද යන්න සරල සිංහලෙන්.",
+  descriptionEn: "The Sinhala edition of Vijay Boyapati's “The Bullish Case for Bitcoin” – what Bitcoin is, why it has value, and where money is heading, explained in plain Sinhala.",
+
+  markedPrice: 1600,               // printed price (shown crossed out)
+  price:       1400,               // our price for ONE book in rupees
+  delivery:    350,                // delivery charge per order in rupees
+  maxCopies:   5,
+
+  pickupPlace: "CeylonCash HQ, Colombo 07",   // where people can collect the book (book price only, no delivery)
+  pickupNote:  "We'll WhatsApp you when your copy is ready to collect. Pay at the office.",
+
+  ordersEmail: "orders@example.com",  // ⬅ every order is emailed here (placeholder in the portfolio copy)
+
+  whatsapp:    "94700000000",      // NOT shown on the page – only used by the "Contact us" buttons
+  whatsappMsg: "Hi CeylonCash, I have a question about the book බිට්කොයින් පෙළහර.",
+
+  // Card payment: paste PayHere payment links (one per number of copies, total incl. delivery):
+  //   1 copy = Rs. 1,750   2 copies = Rs. 3,150   3 copies = Rs. 4,550
+  // Leave a line as "" and the customer will be told you'll send a payment link on WhatsApp.
+  cardLinks: {
+    1: "",
+    2: "",
+    3: ""
+  },
+
+  // Optional bank transfer details. Leave bankDetails "" to hide this option.
+  bankDetails: ""                  // e.g. "Commercial Bank, Colombo – A/C 1234567890 – A. Perera"
+};
+/* ===================================================================== */
+
+const PHOTOS = [
+  ["img/book-cover.jpg",       "img/book-cover-thumb.jpg",       "Front cover"],
+  ["img/book-stack.jpg",       "img/book-stack-thumb.jpg",       "Stack of books"],
+  ["img/book-in-hand.jpg",     "img/book-in-hand-thumb.jpg",     "Book in hand"],
+  ["img/book-stack-angle.jpg", "img/book-stack-angle-thumb.jpg", "Books from the side"]
+];
+
+const LKR = n => "Rs. " + Number(n).toLocaleString("en-LK");
+const $ = id => document.getElementById(id);
+
+// Fill page
+$("title").textContent = SHOP.bookTitle;
+$("enTitle").textContent = SHOP.englishTitle;
+$("author").textContent = SHOP.author;
+$("translator").textContent = SHOP.translator;
+$("desc").textContent = SHOP.description;
+$("descEn").textContent = SHOP.descriptionEn;
+const save = SHOP.markedPrice - SHOP.price;
+$("price").innerHTML = (save > 0 ? '<span class="was">' + LKR(SHOP.markedPrice) + '</span>' : '') + LKR(SHOP.price) + (save > 0 ? ' <span class="save">Save ' + LKR(save) + '</span>' : '');
+$("deliveryNote").textContent = "+ " + LKR(SHOP.delivery) + " delivery · or pick up free in Colombo 07";
+$("topbar").textContent = "Island-wide delivery · Cash on delivery · Pick up at " + SHOP.pickupPlace;
+const WA = "https://wa.me/" + SHOP.whatsapp + "?text=" + encodeURIComponent(SHOP.whatsappMsg);
+document.querySelectorAll(".contact-wa").forEach(a => a.href = WA);
+$("fine").innerHTML = 'Questions? <a href="' + WA + '" target="_blank" rel="noopener">Contact us on WhatsApp</a>. Your details are only used to process your order.';
+
+// Gallery
+PHOTOS.forEach((p, i) => {
+  const b = document.createElement("button");
+  b.type = "button"; b.setAttribute("aria-label", p[2]); b.setAttribute("aria-current", i === 0 ? "true" : "false");
+  b.innerHTML = '<img src="' + p[1] + '" alt="" loading="lazy">';
+  b.onclick = () => {
+    const m = $("mainImg"); m.style.opacity = 0;
+    setTimeout(() => { m.src = p[0]; m.alt = p[2]; m.style.opacity = 1; }, 150);
+    document.querySelectorAll("#thumbs button").forEach(x => x.setAttribute("aria-current", x === b ? "true" : "false"));
+  };
+  $("thumbs").appendChild(b);
+});
+PHOTOS.slice(1).forEach(p => { const im = new Image(); im.src = p[0]; });
+
+for (let i = 1; i <= SHOP.maxCopies; i++) {
+  const o = document.createElement("option"); o.value = i; o.textContent = i; $("qty").appendChild(o);
+}
+
+const options = [
+  {v:"Cash on Delivery", t:"Delivery · cash on delivery", d:"Pay the rider when the book arrives"},
+  {v:"Card", t:"Delivery · pay by card", d:"Visa, Mastercard, Amex, eZ Cash & more"},
+  {v:"Pick up at HQ", t:"Pick up · Colombo 07", d:"At " + SHOP.pickupPlace + " – no delivery fee"}
+];
+if (SHOP.bankDetails) options.splice(2, 0, {v:"Bank Transfer", t:"Delivery · bank transfer", d:"Send the slip on WhatsApp"});
+options.forEach((o, i) => {
+  const l = document.createElement("label"); l.className = "opt";
+  l.innerHTML = '<input type="radio" name="Payment" value="' + o.v + '"' + (i===0?' checked':'') + '><strong>' + o.t + '</strong><span>' + o.d + '</span>';
+  $("payOptions").appendChild(l);
+});
+
+const isPickup = () => document.querySelector('input[name="Payment"]:checked').value === "Pick up at HQ";
+function total(){ return SHOP.price * Number($("qty").value) + (isPickup() ? 0 : SHOP.delivery); }
+function refresh(){
+  const p = isPickup();
+  document.querySelectorAll(".delivery-only").forEach(el => el.classList.toggle("is-hidden", p));
+  $("pickupInfo").classList.toggle("is-hidden", !p);
+  $("pickupInfo").textContent = "📍 " + SHOP.pickupPlace + ". " + SHOP.pickupNote;
+  $("totalLabel").textContent = p ? "Total (pay at pick-up)" : "Total (incl. " + LKR(SHOP.delivery) + " delivery)";
+  $("total").textContent = LKR(total());
+}
+$("qty").addEventListener("change", refresh);
+$("payOptions").addEventListener("change", refresh);
+refresh();
+
+function showMsg(kind, html){ const m=$("msg"); m.className="full msg "+kind; m.innerHTML=html; m.scrollIntoView({behavior:"smooth",block:"center"}); }
+
+$("orderForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target;
+  for (const id of (isPickup() ? ["name","phone"] : ["name","phone","address","city"])) {
+    if (!$(id).value.trim()) { $(id).focus(); showMsg("err","Please fill in all the fields marked *."); return; }
+  }
+  const qty = Number($("qty").value);
+  const pay = f.Payment.value;
+  const orderId = "BK-" + Date.now().toString(36).toUpperCase().slice(-6);
+  const data = Object.fromEntries(new FormData(f).entries());
+  if (data._honey) return;
+  delete data._honey;
+  if (pay === "Pick up at HQ") { data.Address = "PICK UP – " + SHOP.pickupPlace; data.City = "-"; }
+
+  const payload = {
+    "Order ID": orderId,
+    Book: SHOP.englishTitle,
+    ...data,
+    "Total (Rs.)": total(),
+    _subject: "New book order " + orderId + " – " + pay + " – " + data.Name,
+    _template: "table",
+    _captcha: "false"
+  };
+
+  $("submitBtn").disabled = true; $("submitBtn").textContent = "Sending…";
+  try {
+    // Portfolio copy on GitHub Pages: simulate a successful order and send nothing.
+    const DEMO = /\.github\.io$/i.test(location.hostname);
+    const r = DEMO ? (await new Promise(res => setTimeout(res, 700)), { ok: true }) : await fetch("https://formsubmit.co/ajax/" + encodeURIComponent(SHOP.ordersEmail), {
+      method: "POST",
+      headers: {"Content-Type":"application/json", "Accept":"application/json"},
+      body: JSON.stringify(payload)
+    });
+    if (!r.ok) throw new Error("bad response");
+    const paid = payload["Total (Rs.)"];
+    f.reset(); refresh();
+
+    let next = "";
+    if (pay === "Card") {
+      const link = SHOP.cardLinks[qty];
+      next = link
+        ? '<p>Please complete your payment of <b>' + LKR(paid) + '</b> now:</p><p><a class="btn" href="' + link + '" target="_blank" rel="noopener">Pay by card</a></p><p>Mention your order ID <b>' + orderId + '</b> if asked.</p>'
+        : '<p>We will send you a secure card-payment link on WhatsApp shortly.</p>';
+    } else if (pay === "Bank Transfer") {
+      next = '<p>Please transfer <b>' + LKR(paid) + '</b> to:<br>' + SHOP.bankDetails + '</p><p>Then send the slip with your order ID to <a href="https://wa.me/' + SHOP.whatsapp + '?text=' + encodeURIComponent("Payment slip for order " + orderId) + '" target="_blank" rel="noopener">WhatsApp</a>.</p>';
+    } else if (pay === "Pick up at HQ") {
+      next = '<p>Your copy will be kept for you at <b>' + SHOP.pickupPlace + '</b>. Amount to pay at pick-up: <b>' + LKR(paid) + '</b>.</p><p>' + SHOP.pickupNote + '</p>';
+    } else {
+      next = '<p>Please keep <b>' + LKR(paid) + '</b> ready for the delivery rider.</p>';
+    }
+    showMsg("ok", '<h3>Thank you, your order is placed!</h3><p>Order ID: <b>' + orderId + '</b></p>' + next + '<p>We will call or WhatsApp you to confirm.</p><p class="si">අපි ඔබව අමතා ඇණවුම තහවුරු කරන්නෙමු.</p>');
+  } catch (err) {
+    const text = encodeURIComponent("Hi, I'd like to order " + qty + " copy/copies of " + SHOP.englishTitle + ". Name: " + data.Name + ", Address: " + data.Address + ", " + data.City + ", Payment: " + pay);
+    showMsg("err", 'Sorry, something went wrong sending your order. Please <a href="https://wa.me/' + SHOP.whatsapp + '?text=' + text + '" target="_blank" rel="noopener">send it to us on WhatsApp</a> instead.');
+  } finally {
+    $("submitBtn").disabled = false; $("submitBtn").textContent = "Place order";
+  }
+});
+</script>
+</body>
+</html>

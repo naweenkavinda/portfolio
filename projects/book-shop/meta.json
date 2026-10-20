@@ -1,0 +1,24 @@
+{
+    "order":  6,
+    "emoji":  "📚",
+    "icon":  "book",
+    "kind":  "demo",
+    "title":  "Bitcoin Pelahara Book Shop",
+    "summary":  "Online order page for a Sinhala Bitcoin book with photo processing",
+    "blurb":  "An order page for a Sinhala Bitcoin book: a photo gallery, delivery options, dynamic pricing and serverless order emails.",
+    "tech":  [
+                 "HTML",
+                 "Python",
+                 "OpenCV",
+                 "FormSubmit"
+             ],
+    "demoLabel":  "Open demo",
+    "tableLabel":  "Demo",
+    "links":  [
+                  {
+                      "label":  "Real shop",
+                      "emoji":  "🛒",
+                      "url":  "https://comforting-gumption-b35bdf.netlify.app"
+                  }
+              ]
+}

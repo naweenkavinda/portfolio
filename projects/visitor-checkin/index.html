@@ -1,0 +1,745 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Visitor Check-in</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Office visitor check-in system (portfolio demo)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap">
+<style>
+  /* Layout: one centred cream check-in card on a dark lobby ground (deliberately light-only, like the original); brand hero on top, three short sections, success screen replaces the form. */
+  :root {
+    color-scheme: light;
+    --page: #070000;
+    --card: #F4E7E7;
+    --surface: #FFFFFF;
+    --ink: #2E2E2E;
+    --muted: #5E5156;
+    --line: #9A858C;
+    --hair: #E3CFD0;
+    --brand: #8D153A;
+    --brand-hover: #6D0F2A;
+    --brand-ink: #8D153A;
+    --on-brand: #FFFFFF;
+    --orange: #EB7400;
+    --yellow: #FFBE29;
+    --teal: #00534E;
+    --chip-hover: #FBF1F3;
+    --error: #B3261E;
+    --error-bg: #FDECEA;
+    --ok: #1E6B3A;
+    --ok-bg: #E7F4EC;
+    --focus: #8D153A;
+    --hero-a: #1A0A10;
+    --hero-b: #3D1A2A;
+    --hero-ink: #FFFFFF;
+    --hero-muted: #E7D6DB;
+    --hero-accent: #D63B6C;
+    --hero-eyebrow: #EB7400;
+    --ease: cubic-bezier(.2, .8, .2, 1);
+    --font: 'Exo 2', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --radius: 10px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.5;
+    padding-block: 24px 40px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .skip {
+    position: absolute; left: 16px; top: -60px; z-index: 5;
+    background: var(--surface); color: var(--ink); padding: 10px 14px; border-radius: 8px;
+    font-weight: 600;
+  }
+  .skip:focus { top: 16px; }
+
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  .card {
+    max-width: 560px;
+    margin: 0 auto;
+    background: var(--card);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .35);
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    background: linear-gradient(140deg, var(--hero-a) 0%, var(--hero-b) 100%);
+    color: var(--hero-ink);
+    padding: 36px 28px 26px;
+    text-align: center;
+  }
+  .brandbar { display: flex; height: 4px; position: absolute; inset: 0 0 auto; }
+  .brandbar span:nth-child(1) { flex: 32; background: var(--brand); }
+  .brandbar span:nth-child(2) { flex: 24; background: var(--orange); }
+  .brandbar span:nth-child(3) { flex: 24; background: var(--yellow); }
+  .brandbar span:nth-child(4) { flex: 20; background: var(--teal); }
+  .entity { margin: 0 0 22px; font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--hero-muted); }
+  .eyebrow { margin: 0; font-size: 14px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--hero-eyebrow); }
+  .hero h1 {
+    margin: 12px 0 14px;
+    font-size: 26px;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+  }
+  .hero h1 em { font-style: normal; display: block; margin-top: 4px; font-size: clamp(30px, 8vw, 34px); font-weight: 800; color: var(--hero-accent); }
+  .hero .lede { margin: 14px auto 0; color: var(--hero-ink); font-size: 14px; max-width: 42ch; }
+  .hero .bar { display: flex; height: 6px; border-radius: 3px; overflow: hidden; }
+  .hero .bar span:nth-child(1) { flex: 32; background: var(--brand); }
+  .hero .bar span:nth-child(2) { flex: 24; background: var(--orange); }
+  .hero .bar span:nth-child(3) { flex: 24; background: var(--yellow); }
+  .hero .bar span:nth-child(4) { flex: 20; background: var(--teal); }
+
+  .progress { margin-top: 20px; display: grid; gap: 6px; }
+  .progress-label { display: flex; justify-content: center; font-size: 13px; color: var(--hero-muted); font-variant-numeric: tabular-nums; }
+  .progress-track { height: 6px; border-radius: 3px; background: rgba(255,255,255,.18); overflow: hidden; }
+  .progress-fill { height: 100%; width: 0; background: var(--hero-accent); border-radius: 3px; transition: width .3s ease; }
+
+  /* Form */
+  form, .done { padding: 24px 28px 8px; }
+  .req-note { margin: 0 0 20px; font-size: 14px; color: var(--muted); }
+  .req { color: var(--brand-ink); font-weight: 700; }
+
+  .section { border: 0; margin: 0 0 28px; padding: 0; display: grid; gap: 18px; min-width: 0; }
+  .section-title {
+    margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--brand-ink); padding-bottom: 8px; border-bottom: 2px solid var(--orange); width: 100%;
+  }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  .field { align-content: start; }
+  legend { padding: 0; }
+  .lede { text-wrap: balance; }
+  .hint, .error, .done p, .rules li, footer .tag { text-wrap: pretty; }
+  @media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
+
+  .field { display: grid; gap: 6px; min-width: 0; }
+  .field > label, .group legend { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .hint { font-size: 13px; color: var(--muted); margin: -2px 0 0; }
+  .optional { font-weight: 400; color: var(--muted); font-size: 13px; }
+
+  input[type="text"], input[type="email"], input[type="tel"], textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 11px 14px;
+    font: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius);
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  textarea { min-height: 88px; resize: vertical; line-height: 1.45; }
+  input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
+  input:hover, textarea:hover { border-color: var(--ink); }
+  input:focus-visible, textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; border-color: var(--focus); }
+  [aria-invalid="true"] { border-color: var(--error) !important; border-width: 2px !important; }
+
+  .error {
+    display: flex; gap: 6px; align-items: flex-start;
+    margin: 0; font-size: 14px; font-weight: 500; color: var(--error);
+  }
+  .error::before { content: "!"; flex: none; display: inline-grid; place-items: center; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; background: var(--error); color: var(--card); font-size: 12px; font-weight: 800; }
+
+  /* Choice chips: real radios kept in the tab order */
+  .group { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 10px; }
+  .group legend { padding: 0; margin-bottom: 10px; }
+  .chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 10px; }
+  .chip:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .chip { position: relative; display: flex; }
+  .chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .chip span {
+    flex: 1;
+    display: flex; align-items: center; justify-content: flex-start; gap: 10px; text-align: left; line-height: 1.25;
+    min-height: 48px; padding: 10px 14px;
+    background: var(--surface);
+    border: 2px solid var(--hair);
+    border-radius: var(--radius);
+    font-size: 15px; font-weight: 500; color: var(--ink);
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .chip span::before {
+    content: ""; flex: none; width: 18px; height: 18px; border-radius: 50%;
+    border: 1.5px solid var(--line); background: var(--surface);
+    transition: inherit;
+  }
+  .chip:hover span { border-color: var(--brand); background: var(--chip-hover); }
+  .chip input:checked + span { background: var(--brand); border-color: var(--brand); color: var(--on-brand); font-weight: 600; }
+  .chip input:checked + span::before {
+    border-color: var(--on-brand);
+    background: var(--on-brand) no-repeat center / 12px
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.3 2.3 4.7-5' fill='none' stroke='%238D153A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+  .chip input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .group[aria-invalid="true"] .chip span { border-color: var(--error); }
+  .reveal { animation: reveal .2s ease-out; }
+  @keyframes reveal { from { opacity: .4; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+  /* Rules + agreement */
+  .rules { background: var(--surface); border: 1px solid var(--hair); border-radius: var(--radius); padding: 16px 18px; }
+  .rules h3 { margin: 0 0 8px; font-size: 15px; font-weight: 700; }
+  .rules ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 15px; display: grid; gap: 4px; }
+  .agree { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-size: 15px; font-weight: 600; padding: 4px 0; }
+  .agree input { width: 24px; height: 24px; margin: 0; flex: none; accent-color: var(--brand); cursor: pointer; }
+
+  /* Summary + status */
+  .summary {
+    margin: 0 0 24px; padding: 16px 18px; border-radius: var(--radius);
+    background: var(--error-bg); color: var(--ink); border: 2px solid var(--error);
+  }
+  .summary h2 { margin: 0 0 8px; font-size: 16px; color: var(--error); }
+  .summary ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+  .summary a { color: var(--ink); font-weight: 600; text-underline-offset: 3px; }
+  .status { margin: 0 0 20px; padding: 14px 16px; border-radius: var(--radius); background: var(--error-bg); color: var(--ink); border-left: 4px solid var(--error); font-size: 15px; }
+  .status strong { color: var(--error); }
+
+  .submit {
+    width: 100%; min-height: 54px; margin: 8px 0 20px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    font: inherit; font-size: 16px; font-weight: 700; letter-spacing: .04em;
+    color: var(--on-brand); background: var(--brand);
+    border: 0; border-radius: var(--radius); cursor: pointer;
+    transition: background-color .15s ease, transform .15s ease;
+  }
+  .submit:hover { background: var(--brand-hover); }
+  .submit:active { transform: translateY(1px); }
+  .submit[aria-disabled="true"] { cursor: progress; opacity: .85; }
+  .spinner { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Success */
+  .done { padding-bottom: 24px; display: grid; gap: 16px; justify-items: start; }
+  .done-badge { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--ok-bg); color: var(--ok); }
+  .done h2 { margin: 0; font-size: 26px; line-height: 1.2; font-weight: 800; text-wrap: balance; }
+  .done h2:focus { outline: none; }
+  .done p { margin: 0; font-size: 16px; color: var(--muted); max-width: 46ch; }
+  .pass { width: 100%; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--hair); border-radius: var(--radius); font-size: 15px; margin: 0; }
+  .pass dt { color: var(--muted); }
+  .pass dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 0; overflow-wrap: anywhere; }
+  .secondary {
+    min-height: 48px; padding: 10px 18px; font: inherit; font-size: 15px; font-weight: 600;
+    color: var(--brand-ink); background: transparent; border: 1.5px solid var(--brand-ink); border-radius: var(--radius); cursor: pointer;
+  }
+  .secondary:hover { background: var(--chip-hover); }
+
+  footer { border-top: 2px solid var(--orange); padding: 20px 28px 24px; text-align: center; font-size: 14px; color: var(--muted); }
+  footer .tag { margin: 0 0 10px; font-weight: 700; color: var(--brand-ink); }
+  footer .contact { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 24px; margin: 0; }
+  footer a { color: var(--ink); text-underline-offset: 3px; }
+
+  .actions { position: sticky; bottom: 0; z-index: 2; background: var(--card); margin: 0 -28px; padding: 12px 28px 4px; }
+  .actions .submit { margin: 0 0 12px; }
+
+  /* Phones: full-bleed card, gutters move to each band, sticky check-in bar */
+  @media (max-width: 560px) {
+    body { padding: 0; }
+    .card { border-radius: 0; box-shadow: none; min-height: 100%; }
+    .hero, form, .done, footer {
+      padding-left: max(20px, env(safe-area-inset-left, 0px));
+      padding-right: max(20px, env(safe-area-inset-right, 0px));
+    }
+    .hero { padding-block: calc(24px + env(safe-area-inset-top, 0px)) 18px; }
+    .entity { margin-bottom: 14px; }
+    .hero .lede { font-size: 15px; }
+    form, .done { padding-block: 20px 0; }
+    .done { padding-bottom: 24px; }
+    .section { margin-bottom: 24px; gap: 16px; }
+    .chips { gap: 8px; }
+    .chip span { padding: 10px 12px; font-size: 15px; gap: 8px; }
+    .actions {
+      margin-left: calc(-1 * max(20px, env(safe-area-inset-left, 0px)));
+      margin-right: calc(-1 * max(20px, env(safe-area-inset-right, 0px)));
+      padding: 10px max(20px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
+      border-top: 1px solid var(--hair);
+      box-shadow: 0 -6px 16px rgba(0,0,0,.08);
+    }
+    .actions .submit { margin: 0; }
+    footer { padding-block: 20px calc(24px + env(safe-area-inset-bottom, 0px)); }
+  }
+  @media (max-width: 340px) { .chips { grid-template-columns: 1fr; } }
+  /* Motion */
+  @keyframes rise { from { opacity: .4; transform: translateY(14px) scale(.99); } to { opacity: 1; transform: none; } }
+  @keyframes fadeUp { from { opacity: .25; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes errIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  @keyframes pop { 0% { transform: scale(.4); } 70% { transform: scale(1.12); } 100% { transform: scale(1); } }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  .card { animation: rise .55s var(--ease) both; }
+  .brandbar span { transform-origin: left; animation: grow .7s var(--ease) both; }
+  .brandbar span:nth-child(2) { animation-delay: .08s; }
+  .brandbar span:nth-child(3) { animation-delay: .16s; }
+  .brandbar span:nth-child(4) { animation-delay: .24s; }
+  .hero > .entity, .hero > .eyebrow, .hero > h1, .hero > .lede, .hero > .progress { animation: fadeUp .5s var(--ease) both; }
+  .hero > .eyebrow { animation-delay: .06s; }
+  .hero > h1 { animation-delay: .12s; }
+  .hero > .lede { animation-delay: .18s; }
+  .hero > .progress { animation-delay: .24s; }
+  form > .section { animation: fadeUp .5s var(--ease) both; }
+  form > .section:nth-of-type(1) { animation-delay: .2s; }
+  form > .section:nth-of-type(2) { animation-delay: .28s; }
+  form > .section:nth-of-type(3) { animation-delay: .36s; }
+
+  .error:not([hidden]) { animation: errIn .22s var(--ease); }
+  .summary:not([hidden]), .status:not([hidden]) { animation: fadeUp .3s var(--ease); }
+
+  input[type="text"], input[type="email"], input[type="tel"], textarea {
+    transition: border-color .2s var(--ease), box-shadow .2s var(--ease), background-color .2s var(--ease);
+  }
+  input:focus-visible, textarea:focus-visible { outline: 2px solid transparent; box-shadow: 0 0 0 3px var(--focus); border-color: var(--focus); }
+
+  .chip span { transition: background-color .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), transform .12s var(--ease), box-shadow .25s var(--ease); }
+  .chip:active span { transform: scale(.97); }
+  .chip input:checked + span { box-shadow: 0 4px 14px rgba(141, 21, 58, .22); }
+  .chip input:checked + span::before { animation: pop .3s var(--ease); }
+
+  .progress-fill { transition: width .5s var(--ease), background-color .3s ease; }
+  .progress.complete .progress-fill { background: #4CC38A; }
+
+  .submit { transition: background-color .2s var(--ease), transform .15s var(--ease), box-shadow .2s var(--ease); }
+  .submit:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(141, 21, 58, .28); }
+  .submit:active { transform: translateY(0); box-shadow: none; }
+  .submit .spinner { animation: spin .8s linear infinite, errIn .2s var(--ease); }
+
+  .done:not([hidden]) > * { animation: fadeUp .45s var(--ease) both; }
+  .done:not([hidden]) > :nth-child(2) { animation-delay: .08s; }
+  .done:not([hidden]) > :nth-child(3) { animation-delay: .14s; }
+  .done:not([hidden]) > :nth-child(4) { animation-delay: .2s; }
+  .done:not([hidden]) > :nth-child(5) { animation-delay: .26s; }
+  .done:not([hidden]) .done-badge { animation: pop .45s var(--ease) both; }
+  .done-badge path { stroke-dasharray: 24; stroke-dashoffset: 24; }
+  .done:not([hidden]) .done-badge path { animation: draw .5s .25s var(--ease) forwards; }
+  .secondary { transition: background-color .2s var(--ease); }
+
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .28s; animation-timing-function: var(--ease); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
+</style>
+
+<a class="skip" href="#fullName">Skip to check-in form</a>
+
+<main class="card">
+  <header class="hero">
+    <div class="brandbar" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <p class="entity">Example Company</p>
+    <p id="demoNote" hidden style="margin:-10px auto 16px;display:inline-block;padding:4px 12px;border-radius:999px;background:#EB7400;color:#fff;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase">Portfolio demo · nothing is sent or saved</p>
+    <p class="eyebrow">Welcome to our office</p>
+    <h1>Visitor? <em>Check in here</em></h1>
+    <div class="bar" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <p class="lede">Please complete your visitor information and check in below.</p>
+    <div class="progress" id="progressWrap">
+      <div class="progress-label"><span id="progressText">0 of 7 required items done</span></div>
+      <div class="progress-track" role="progressbar" aria-labelledby="progressText" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+  </header>
+
+  <form id="visitorForm" novalidate aria-describedby="reqNote">
+    <div id="errorSummary" class="summary" tabindex="-1" hidden>
+      <h2 id="summaryTitle">Please fix these before checking in</h2>
+      <ul id="summaryList"></ul>
+    </div>
+    <div id="statusMessage" class="status" role="alert" hidden></div>
+
+    <p class="req-note" id="reqNote">Fields marked <span class="req" aria-hidden="true">*</span><span class="sr-only">with an asterisk</span> are required.</p>
+
+    <fieldset class="section">
+      <legend class="section-title">Your information</legend>
+      <div class="row">
+        <div class="field">
+          <label for="fullName">Full name <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="fullName" name="fullName" required autocomplete="name" autocapitalize="words" enterkeyhint="next" aria-describedby="fullName-error">
+          <p class="error" id="fullName-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="email">Email <span class="optional">(optional)</span></label>
+          <input type="email" id="email" name="email" autocomplete="email" autocapitalize="off" spellcheck="false" enterkeyhint="next" inputmode="email" placeholder="you@company.com" aria-describedby="email-error">
+          <p class="error" id="email-error" hidden></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="phone">Phone <span class="req" aria-hidden="true">*</span></label>
+          <input type="tel" id="phone" name="phone" required autocomplete="tel" enterkeyhint="next" inputmode="tel" placeholder="+94 7X XXX XXXX" aria-describedby="phone-error">
+          <p class="error" id="phone-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="company">Company or organization <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="company" name="company" required autocomplete="organization" autocapitalize="words" enterkeyhint="next" aria-describedby="company-hint company-error">
+          <p class="hint" id="company-hint">Write "Individual" if you're not visiting for a company.</p>
+          <p class="error" id="company-error" hidden></p>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="section">
+      <legend class="section-title">Visit details</legend>
+
+      <fieldset class="group" id="purposeGroup" aria-describedby="purpose-error">
+        <legend>Purpose of visit <span class="req" aria-hidden="true">*</span></legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" id="purpose-meeting" name="purpose" value="meeting" required><span>Business meeting</span></label>
+          <label class="chip"><input type="radio" id="purpose-partnership" name="purpose" value="partnership"><span>Partnership</span></label>
+          <label class="chip"><input type="radio" id="purpose-investment" name="purpose" value="investment"><span>Investment</span></label>
+          <label class="chip"><input type="radio" id="purpose-technical" name="purpose" value="technical"><span>Technical support</span></label>
+          <label class="chip"><input type="radio" id="purpose-demo" name="purpose" value="demo"><span>Product demo</span></label>
+          <label class="chip"><input type="radio" id="purpose-compliance" name="purpose" value="compliance"><span>Compliance</span></label>
+          <label class="chip"><input type="radio" id="purpose-interview" name="purpose" value="interview"><span>Job interview</span></label>
+          <label class="chip"><input type="radio" id="purpose-other" name="purpose" value="other"><span>Other</span></label>
+        </div>
+        <p class="error" id="purpose-error" hidden></p>
+      </fieldset>
+      <div class="field reveal" id="purposeOtherWrap" hidden>
+        <label for="purposeOther">What is the purpose of your visit? <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="purposeOther" name="purposeOther" autocomplete="off" aria-describedby="purposeOther-error">
+        <p class="error" id="purposeOther-error" hidden></p>
+      </div>
+
+      <fieldset class="group" id="departmentGroup" aria-describedby="visitingDepartment-error">
+        <legend>Department you're visiting <span class="req" aria-hidden="true">*</span></legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" id="dept-bd" name="visitingDepartment" value="business_development" required><span>Business development</span></label>
+          <label class="chip"><input type="radio" id="dept-technical" name="visitingDepartment" value="technical"><span>Technical</span></label>
+          <label class="chip"><input type="radio" id="dept-operations" name="visitingDepartment" value="operations"><span>Operations</span></label>
+          <label class="chip"><input type="radio" id="dept-finance" name="visitingDepartment" value="finance"><span>Finance</span></label>
+          <label class="chip"><input type="radio" id="dept-compliance" name="visitingDepartment" value="compliance"><span>Compliance</span></label>
+          <label class="chip"><input type="radio" id="dept-hr" name="visitingDepartment" value="hr"><span>HR</span></label>
+          <label class="chip"><input type="radio" id="dept-other" name="visitingDepartment" value="other"><span>Other / not sure</span></label>
+        </div>
+        <p class="error" id="visitingDepartment-error" hidden></p>
+      </fieldset>
+
+      <div class="field">
+        <label for="contactPerson">Who are you meeting? <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="contactPerson" name="contactPerson" required autocomplete="off" autocapitalize="words" enterkeyhint="next" aria-describedby="contactPerson-hint contactPerson-error">
+        <p class="hint" id="contactPerson-hint">Their name or job title, for example "Head of Operations".</p>
+        <p class="error" id="contactPerson-error" hidden></p>
+      </div>
+
+      <div class="field">
+        <label for="notes">Anything else reception should know? <span class="optional">(optional)</span></label>
+        <textarea id="notes" name="notes" rows="3" aria-describedby="notes-hint"></textarea>
+        <p class="hint" id="notes-hint">For example accessibility needs, parking, or a meeting room.</p>
+      </div>
+    </fieldset>
+
+    <fieldset class="section">
+      <legend class="section-title">Visitor rules</legend>
+      <div class="rules" id="rulesBox">
+        <h3>While you're on site, please:</h3>
+        <ul>
+          <li>Keep any sensitive information you see or hear confidential</li>
+          <li>Don't take photos in restricted areas</li>
+          <li>Follow all security instructions</li>
+          <li>Stay with your assigned escort at all times</li>
+        </ul>
+      </div>
+      <div class="field">
+        <label class="agree" for="agreeTerms">
+          <input type="checkbox" id="agreeTerms" name="agreeTerms" required aria-describedby="rulesBox agreeTerms-error">
+          <span>I have read and agree to the visitor rules <span class="req" aria-hidden="true">*</span></span>
+        </label>
+        <p class="error" id="agreeTerms-error" hidden></p>
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="submit" class="submit" id="submitBtn">
+        <span id="submitLabel">Complete check-in</span>
+      </button>
+    </div>
+  </form>
+
+  <section class="done" id="doneView" hidden aria-labelledby="doneTitle">
+    <div class="done-badge" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+    </div>
+    <h2 id="doneTitle" tabindex="-1">You're checked in</h2>
+    <p id="doneText">Please go to the reception desk. They'll let your host know you've arrived.</p>
+    <dl class="pass">
+      <dt>Visitor</dt><dd id="passName"></dd>
+      <dt>Meeting</dt><dd id="passHost"></dd>
+      <dt>Checked in</dt><dd id="passTime"></dd>
+    </dl>
+    <button type="button" class="secondary" id="againBtn">Check in another visitor</button>
+  </section>
+
+  <footer>
+    <p class="tag">Thank you for visiting.</p>
+    <p class="contact">
+      <span>reception@example.com</span>
+      <span>example.com</span>
+    </p>
+  </footer>
+</main>
+
+<script>
+(() => {
+  document.documentElement.lang = 'en';
+
+  const ENDPOINT = '/.netlify/functions/process-visitor';
+  // Portfolio copy on GitHub Pages: there is no backend there, so simulate the check-in and send nothing.
+  const DEMO = /\.github\.io$/i.test(location.hostname);
+  const $ = (id) => document.getElementById(id);
+  if (DEMO) { const d = document.getElementById('demoNote'); if (d) d.hidden = false; }
+  const form = $('visitorForm');
+  const submitBtn = $('submitBtn');
+  const submitLabel = $('submitLabel');
+  const summary = $('errorSummary');
+  const summaryList = $('summaryList');
+  const status = $('statusMessage');
+  const otherWrap = $('purposeOtherWrap');
+  const otherInput = $('purposeOther');
+  let submitting = false;
+  let attempted = false;
+
+  const radioVal = (name) => (form.querySelector(`input[name="${name}"]:checked`) || {}).value || '';
+  const digits = (s) => s.replace(/\D/g, '');
+
+  // Each rule returns an error message, or '' when valid.
+  const rules = {
+    fullName: () => $('fullName').value.trim().length < 2 ? 'Enter your full name.' : '',
+    email: () => {
+      const v = $('email').value.trim();
+      return v && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? 'Enter an email like name@company.com, or leave it blank.' : '';
+    },
+    phone: () => {
+      const v = $('phone').value.trim();
+      if (!v) return 'Enter your phone number.';
+      return digits(v).length < 9 ? 'Enter a full phone number, for example +94 77 123 4567.' : '';
+    },
+    company: () => $('company').value.trim() ? '' : 'Enter your company, or write "Individual".',
+    purpose: () => radioVal('purpose') ? '' : 'Choose the purpose of your visit.',
+    purposeOther: () => radioVal('purpose') === 'other' && !otherInput.value.trim() ? 'Tell us the purpose of your visit.' : '',
+    visitingDepartment: () => radioVal('visitingDepartment') ? '' : 'Choose the department you are visiting.',
+    contactPerson: () => $('contactPerson').value.trim() ? '' : 'Enter the name or title of the person you are meeting.',
+    agreeTerms: () => $('agreeTerms').checked ? '' : 'Tick the box to agree to the visitor rules.'
+  };
+  // Where focus goes when an error link is followed
+  const focusTarget = {
+    purpose: () => form.querySelector('input[name="purpose"]:checked') || $('purpose-meeting'),
+    visitingDepartment: () => form.querySelector('input[name="visitingDepartment"]:checked') || $('dept-bd')
+  };
+  const invalidHost = { purpose: $('purposeGroup'), visitingDepartment: $('departmentGroup') };
+  const order = ['fullName', 'email', 'phone', 'company', 'purpose', 'purposeOther', 'visitingDepartment', 'contactPerson', 'agreeTerms'];
+  const touched = new Set();
+
+  function showError(key, msg) {
+    const err = $(key + '-error');
+    const host = invalidHost[key] || $(key);
+    if (msg) {
+      err.textContent = msg;
+      err.hidden = false;
+      host.setAttribute('aria-invalid', 'true');
+      if (invalidHost[key]) host.querySelectorAll('input').forEach(i => i.setAttribute('aria-invalid', 'true'));
+    } else {
+      err.hidden = true;
+      err.textContent = '';
+      host.removeAttribute('aria-invalid');
+      if (invalidHost[key]) host.querySelectorAll('input').forEach(i => i.removeAttribute('aria-invalid'));
+    }
+  }
+  const check = (key) => { const m = rules[key](); showError(key, m); return m; };
+
+  // Progress through the 7 required items
+  const requiredKeys = ['fullName', 'phone', 'company', 'purpose', 'visitingDepartment', 'contactPerson', 'agreeTerms'];
+  function updateProgress() {
+    const done = requiredKeys.filter(k => !rules[k]() && (k !== 'purpose' || !rules.purposeOther())).length;
+    $('progressText').textContent = done === 7 ? 'All required items done' : `${done} of 7 required items done`;
+    $('progressBar').setAttribute('aria-valuenow', String(done));
+    $('progressFill').style.width = (done / 7 * 100) + '%';
+    $('progressWrap').classList.toggle('complete', done === 7);
+  }
+
+  function refreshSummary() {
+    if (summary.hidden) return;
+    const left = order.filter(k => rules[k]());
+    if (!left.length) { summary.hidden = true; return; }
+    renderSummary(left);
+  }
+  function renderSummary(keys) {
+    summaryList.innerHTML = '';
+    keys.forEach(k => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + (focusTarget[k] ? focusTarget[k]().id : k);
+      a.textContent = rules[k]();
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const el = focusTarget[k] ? focusTarget[k]() : $(k);
+        el.focus();
+        el.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      });
+      li.appendChild(a);
+      summaryList.appendChild(li);
+    });
+    $('summaryTitle').textContent = keys.length === 1 ? 'Please fix 1 thing before checking in' : `Please fix ${keys.length} things before checking in`;
+  }
+
+  // Text inputs: validate on blur once touched; clear errors as soon as they're fixed
+  ['fullName', 'email', 'phone', 'company', 'purposeOther', 'contactPerson'].forEach(key => {
+    const el = $(key);
+    el.addEventListener('blur', () => {
+      if (el.value.trim() || attempted) { touched.add(key); check(key); }
+    });
+    el.addEventListener('input', () => {
+      if (touched.has(key) || attempted) { if (!rules[key]()) showError(key, ''); }
+      updateProgress(); refreshSummary();
+    });
+  });
+
+  // Radios
+  form.querySelectorAll('input[name="purpose"]').forEach(r => r.addEventListener('change', () => {
+    showError('purpose', '');
+    const isOther = radioVal('purpose') === 'other';
+    otherWrap.hidden = !isOther;
+    otherInput.required = isOther;
+    if (isOther) otherInput.focus();
+    else showError('purposeOther', '');
+    updateProgress(); refreshSummary();
+  }));
+  form.querySelectorAll('input[name="visitingDepartment"]').forEach(r => r.addEventListener('change', () => {
+    showError('visitingDepartment', ''); updateProgress(); refreshSummary();
+  }));
+  $('agreeTerms').addEventListener('change', () => {
+    if (attempted || touched.has('agreeTerms')) check('agreeTerms');
+    touched.add('agreeTerms'); updateProgress(); refreshSummary();
+  });
+
+  function setBusy(on) {
+    submitting = on;
+    form.setAttribute('aria-busy', on ? 'true' : 'false');
+    submitBtn.setAttribute('aria-disabled', on ? 'true' : 'false');
+    submitBtn.innerHTML = on
+      ? '<span class="spinner" aria-hidden="true"></span><span id="submitLabel">Checking you in…</span>'
+      : '<span id="submitLabel">Complete check-in</span>';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (submitting) return;
+    attempted = true;
+    status.hidden = true;
+
+    const errors = order.filter(k => check(k));
+    if (errors.length) {
+      renderSummary(errors);
+      summary.hidden = false;
+      summary.focus();
+      summary.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      return;
+    }
+    summary.hidden = true;
+
+    const purpose = radioVal('purpose');
+    const now = new Date();
+    const data = {
+      fullName: $('fullName').value.trim(),
+      email: $('email').value.trim() || 'Not provided',
+      phone: $('phone').value.trim(),
+      company: $('company').value.trim(),
+      purpose,
+      purposeDetail: purpose === 'other' ? otherInput.value.trim() : '',
+      visitingDepartment: radioVal('visitingDepartment'),
+      contactPerson: $('contactPerson').value.trim(),
+      notes: $('notes').value.trim() || 'None',
+      checkInTime: now.toISOString(),
+      userAgent: navigator.userAgent
+    };
+
+    setBusy(true);
+    if (DEMO) { await new Promise(r => setTimeout(r, 700)); setBusy(false); showDone(data, now); return; }
+    try {
+      const res = await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      showDone(data, now);
+    } catch (err) {
+      console.error('Check-in failed:', err);
+      status.innerHTML = '<strong>We couldn’t record your check-in.</strong> Your details are still here. Please try again, or ask reception for help.';
+      status.hidden = false;
+      status.scrollIntoView({ block: 'start', behavior: 'auto' });
+    } finally {
+      setBusy(false);
+    }
+  });
+
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Cross-fade between the form and the success screen where the browser supports it
+  function swapView(fn) {
+    if (document.startViewTransition && !reduced()) document.startViewTransition(fn);
+    else fn();
+  }
+
+  function showDone(data, when) {
+    swapView(() => renderDone(data, when));
+  }
+  function renderDone(data, when) {
+    $('doneTitle').textContent = `You're checked in, ${data.fullName.split(/\s+/)[0]}`;
+    $('passName').textContent = `${data.fullName} · ${data.company}`;
+    $('passHost').textContent = data.contactPerson;
+    $('passTime').textContent = when.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + ', ' +
+      when.toLocaleDateString([], { day: 'numeric', month: 'short', year: 'numeric' });
+    form.hidden = true;
+    $('progressWrap').hidden = true;
+    $('doneView').hidden = false;
+    $('doneTitle').focus();
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  $('againBtn').addEventListener('click', () => swapView(resetForm));
+  function resetForm() {
+    form.reset();
+    attempted = false;
+    touched.clear();
+    order.forEach(k => showError(k, ''));
+    otherWrap.hidden = true;
+    otherInput.required = false;
+    summary.hidden = true;
+    status.hidden = true;
+    $('doneView').hidden = true;
+    form.hidden = false;
+    $('progressWrap').hidden = false;
+    updateProgress();
+    $('fullName').focus();
+  }
+
+  // On phones, the keyboard's Enter/Next key moves to the next field instead of submitting early
+  const flow = ['fullName', 'email', 'phone', 'company', 'purposeOther', 'contactPerson'];
+  flow.forEach((key, i) => {
+    $(key).addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' || e.isComposing) return;
+      e.preventDefault();
+      if (key === 'company') { (focusTarget.purpose()).focus(); return; }
+      if (key === 'purposeOther') { focusTarget.visitingDepartment().focus(); return; }
+      if (key === 'contactPerson') { $('notes').focus(); return; }
+      $(flow[i + 1]).focus();
+    });
+  });
+
+  updateProgress();
+})();
+</script>
+
+</body></html>

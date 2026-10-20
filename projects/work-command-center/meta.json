@@ -1,0 +1,16 @@
+{
+    "order":  3,
+    "emoji":  "📋",
+    "icon":  "kanban",
+    "kind":  "demo",
+    "title":  "Work Command Center",
+    "summary":  "Team and personal action-item board with kanban, team views and category filters",
+    "blurb":  "A team and personal action-item board with kanban and team views, category filters and live stats.",
+    "tech":  [
+                 "HTML",
+                 "CSS",
+                 "JavaScript"
+             ],
+    "demoLabel":  "Open demo",
+    "tableLabel":  "Demo"
+}

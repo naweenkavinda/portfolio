@@ -1,0 +1,16 @@
+{
+    "order":  5,
+    "emoji":  "🛂",
+    "icon":  "door",
+    "kind":  "demo",
+    "title":  "Visitor Check-in System",
+    "summary":  "Digital visitor management for office entrance",
+    "blurb":  "A tablet check-in kiosk for an office entrance, with validation, a progress bar and a digital visitor pass. It keeps a visitor log for physical security.",
+    "tech":  [
+                 "HTML",
+                 "CSS",
+                 "JavaScript"
+             ],
+    "demoLabel":  "Open demo",
+    "tableLabel":  "Demo"
+}

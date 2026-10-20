@@ -1,0 +1,23 @@
+# Reviewed exceptions for leak-check.ps1. One per line:
+#   <path pattern>  <rule>  [regex the matched text must fit]
+# Path patterns use * wildcards. Keep this list short, and say why each line is here.
+
+# My own public contact address, shown on purpose.
+README.md          EMAIL     ^naweenkavinda95@gmail\.com$
+index.html         EMAIL     ^naweenkavinda95@gmail\.com$
+
+# Placeholder addresses and numbers used in demos.
+*                  EMAIL     @example\.(com|org|net)$
+projects/visitor-checkin/*  EMAIL  ^(you|name)@company\.com$
+projects/book-shop/*        PHONE_LK  ^94700000000$
+projects/visitor-checkin/*  PHONE_LK  ^\+94 77 123 4567$
+
+# Made-up example NIC in the NIC Checker (built from 1 Jan 1990, serial 123).
+projects/nic-checker/*      NIC_*     ^(199050101235|905011235[VvXx])$
+
+# Relative path of the office deployment's serverless function; no host or secret.
+projects/visitor-checkin/*  ENDPOINT  ^/\.netlify/functions/$
+
+# Bitcoin Pelahara is a published book; the shop credits the translator by name.
+# Kept on purpose (owner's decision, 20 Oct 2026).
+projects/book-shop/*        DENY#1

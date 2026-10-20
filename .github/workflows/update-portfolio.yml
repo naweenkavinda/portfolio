@@ -1,0 +1,48 @@
+# Keeps the homepage (index.html) and the README project table in sync with projects/.
+# Runs whenever anything under projects/ changes, rebuilds both with
+# .github/scripts/build-portfolio.ps1, and commits the result back to main.
+name: Update portfolio index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'projects/**'
+      - '.github/scripts/build-portfolio.ps1'
+      - '.github/workflows/update-portfolio.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: update-portfolio
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rebuild homepage cards and README table
+        shell: pwsh
+        run: ./.github/scripts/build-portfolio.ps1
+
+      - name: Commit and publish if anything changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- index.html README.md; then
+            echo "Homepage and README already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html README.md
+          git commit -m "Update portfolio homepage and project table"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          # Pushes made by the workflow token don't always start a Pages build, so ask for one.
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" >/dev/null || echo "Pages build request skipped"
