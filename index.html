@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Naween Kavinda · Portfolio</title>
-<meta name="description" content="Tools, dashboards and web apps built by Naween Kavinda: project manager, business developer and civil engineer working in crypto and fintech.">
+<title>Naween Rathnayake (Nawty) · Portfolio</title>
+<meta name="description" content="Tools, dashboards and web apps built by Naween Rathnayake, aka Nawty: project manager, business developer and civil engineer working in crypto and fintech.">
 <meta name="theme-color" content="#E7E4DD">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,6 +55,10 @@ h1 .ln > span { display: block; animation: rise 1s var(--ease) both; }
 h1 .ln:nth-child(2) > span { animation-delay: .12s; color: var(--accent); }
 .roles { display: flex; flex-direction: column; gap: 10px; max-width: 380px; padding-bottom: 8px; animation: fade-up .9s .45s var(--ease) both; }
 .roles b { font: 700 26px/1.05 var(--display); text-transform: uppercase; }
+.aka { align-self: flex-start; display: inline-block; margin-bottom: 6px; padding: 6px 14px 5px; border: 3px solid var(--accent); color: var(--accent);
+  font: 900 24px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; transform: rotate(-5deg);
+  animation: stamp .55s 1.1s cubic-bezier(.3,1.6,.5,1) both; }
+@keyframes stamp { from { transform: rotate(-5deg) scale(2.6); opacity: 0; } }
 .roles p { margin: 0; color: var(--ink-2); }
 .dim { display: block; width: 100%; height: 26px; overflow: visible; }
 .dim path, .dim line { stroke: var(--ink); stroke-width: 1.5; fill: none; }
@@ -277,8 +281,9 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
   <header>
     <div class="sheetbar mono"><span>Site plan · Portfolio · Sheet 1 of 1</span><span>Scale 1:1 · North ↑</span></div>
     <div class="titlerow">
-      <h1><span class="ln"><span>Naween</span></span><span class="ln"><span>Kavinda</span></span></h1>
+      <h1><span class="ln"><span>Naween</span></span><span class="ln"><span>Rathnayake</span></span></h1>
       <div class="roles">
+        <span class="aka">aka “Nawty”</span>
         <b>Project manager · Business developer · Civil engineer</b>
         <p>I build tools for fintech, crypto and operations, and plan them the way I'd plan a site: in systems, whether it's a payment flow or a construction timeline.</p>
       </div>
@@ -373,7 +378,7 @@ footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
   </section>
 
   <footer>
-    <span>Drawn by Naween Kavinda · Sri Lanka</span>
+    <span>Drawn by Naween Rathnayake (Nawty) · Sri Lanka</span>
     <nav aria-label="Contact"><a href="mailto:naweenkavinda95@gmail.com">naweenkavinda95@gmail.com</a><a href="https://github.com/naweenkavinda/portfolio" target="_blank" rel="noopener">GitHub ↗</a></nav>
   </footer>
 </div>

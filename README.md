@@ -1,4 +1,5 @@
-# Naween Kavinda
+# Naween Rathnayake
+*aka Nawty*
 
 **Project Manager · Business Developer · Civil Engineer**
 Working in crypto and fintech
