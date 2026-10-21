@@ -3,7 +3,7 @@
 A single-page order form for selling "බිට්කොයින් පෙළහර" (Bitcoin Pelahara), the Sinhala translation of Vijay Boyapati's "The Bullish Case for Bitcoin", translated by CeylonCash.
 
 🛒 **[Live shop](https://comforting-gumption-b35bdf.netlify.app)**, the real store on Netlify.
-▶ **[Portfolio demo](https://naweenkavinda.github.io/portfolio/projects/book-shop/)**. Source: [`index.html`](index.html).
+▶ **[Portfolio demo](https://naweenkavinda.github.io/book-shop/)**. Source: [naweenkavinda/book-shop](https://github.com/naweenkavinda/book-shop).
 
 > The portfolio copy runs in demo mode: the order form goes through the full flow but sends nothing. The order email and WhatsApp number are replaced with placeholders.
 

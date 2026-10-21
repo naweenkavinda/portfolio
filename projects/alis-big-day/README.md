@@ -2,7 +2,7 @@
 
 A 15-page interactive storybook for children aged 3–6. Kids help Ali, a baby elephant, travel across Sri Lanka to Grandma's Vesak lantern party. Each page has one hands-on activity that builds thinking skills or hand-eye coordination.
 
-▶ **[Play it live](https://naweenkavinda.github.io/portfolio/projects/alis-big-day/)**. Works on phones, tablets and computers. You can add it to a phone's home screen to use it like an app.
+▶ **[Play it live](https://naweenkavinda.github.io/alis-big-day/)**. Works on phones, tablets and computers. You can add it to a phone's home screen to use it like an app.
 
 The whole game is one self-contained file, [`index.html`](index.html), with no build step.
 
@@ -58,3 +58,5 @@ HTML, CSS and plain JavaScript in a single file. It uses:
 - The Web Audio API for sound effects.
 - The Web Speech API for narration.
 - CSS 3D transforms and container queries for the layout and page turns.
+
+Source code: [naweenkavinda/alis-big-day](https://github.com/naweenkavinda/alis-big-day)

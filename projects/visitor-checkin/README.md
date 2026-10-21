@@ -2,7 +2,7 @@
 
 A digital visitor management system for a company's office entrance. Replaces paper sign-in with a clean, tracked check-in flow.
 
-▶ **[Try the live demo](https://naweenkavinda.github.io/portfolio/projects/visitor-checkin/)**. Source: [`index.html`](index.html).
+▶ **[Try the live demo](https://naweenkavinda.github.io/visitor-checkin/)**. Source: [naweenkavinda/visitor-checkin](https://github.com/naweenkavinda/visitor-checkin).
 
 > The portfolio copy runs in demo mode: it goes through the full check-in flow, but nothing is sent or saved. Company details are replaced with placeholders. In the office it posts each check-in to a Netlify serverless function (`/.netlify/functions/process-visitor`).
 

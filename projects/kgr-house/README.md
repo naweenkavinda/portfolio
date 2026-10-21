@@ -2,7 +2,7 @@
 
 An interactive, walkable 3D model of a real house built from an architectural floor plan. Navigate the house using arrow keys on desktop or on-screen controls on mobile.
 
-▶ **[Open the 3D model live](https://naweenkavinda.github.io/portfolio/projects/kgr-house/)**. Source: [`index.html`](index.html).
+▶ **[Open the 3D model live](https://naweenkavinda.github.io/kgr-house/)**. Source: [naweenkavinda/kgr-house](https://github.com/naweenkavinda/kgr-house).
 
 ## What it does
 

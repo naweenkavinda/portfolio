@@ -17,5 +17,13 @@
     "tableLabel":  "Play",
     "variant":  "dark",
     "category":  "Kids",
-    "span":  6
+    "span":  6,
+    "demoUrl":  "https://naweenkavinda.github.io/alis-big-day/",
+    "links":  [
+                  {
+                      "label":  "Source code",
+                      "emoji":  "💻",
+                      "url":  "https://github.com/naweenkavinda/alis-big-day"
+                  }
+              ]
 }

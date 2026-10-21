@@ -15,5 +15,13 @@
     "tableLabel":  "Open",
     "variant":  "dashed",
     "category":  "Dashboard",
-    "span":  5
+    "span":  5,
+    "demoUrl":  "https://naweenkavinda.github.io/crypto-command-center/",
+    "links":  [
+                  {
+                      "label":  "Source code",
+                      "emoji":  "💻",
+                      "url":  "https://github.com/naweenkavinda/crypto-command-center"
+                  }
+              ]
 }

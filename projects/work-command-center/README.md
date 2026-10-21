@@ -2,7 +2,7 @@
 
 A personal and team action-item board for running day-to-day work at a fintech company. Tasks are grouped by team and by category, and urgent items surface first.
 
-▶ **[Try the live demo](https://naweenkavinda.github.io/portfolio/projects/work-command-center/)**. Source: [`index.html`](index.html).
+▶ **[Try the live demo](https://naweenkavinda.github.io/work-command-center/)**. Source: [naweenkavinda/work-command-center](https://github.com/naweenkavinda/work-command-center).
 
 > The portfolio copy is a demo: it starts with made-up sample tasks and generic categories, and saves your changes only in your own browser. The real board runs as a claude.ai artifact on a shared database, so the whole team sees the same items live.
 

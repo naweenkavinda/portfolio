@@ -2,7 +2,7 @@
 
 A one-page command center for the crypto market and Sri Lanka's virtual-asset (VASP) regulation, built to follow the crypto market and policy news in one place.
 
-▶ **[Open the live snapshot](https://naweenkavinda.github.io/portfolio/projects/crypto-command-center/)**. Source: [`index.html`](index.html).
+▶ **[Open the live snapshot](https://naweenkavinda.github.io/crypto-command-center/)**. Source: [naweenkavinda/crypto-command-center](https://github.com/naweenkavinda/crypto-command-center).
 
 > The portfolio copy is a **frozen snapshot** with the data as of October 2026. The live version runs as a claude.ai dashboard. Scheduled Claude web-search tasks refresh its 25 data sources on their own timetables, from hourly to daily. In this copy, the saved policy briefs are removed and the news thumbnails are left out.
 

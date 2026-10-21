@@ -1,0 +1,27 @@
+{
+    "order":  9,
+    "emoji":  "🧮",
+    "icon":  "sheet",
+    "kind":  "live",
+    "title":  "Sri Lanka Take-Home Pay",
+    "summary":  "Salary calculator for Sri Lanka: APIT, EPF and ETF, real take-home pay and the employer\u0027s true cost.",
+    "blurb":  "Payslip for the employee, true cost for the employer. APIT, EPF, ETF, gratuity and overtime worked out from Sri Lankan law, with every formula cited.",
+    "tech":  [
+                 "HTML",
+                 "JavaScript",
+                 "Tax law"
+             ],
+    "demoLabel":  "Open tool",
+    "tableLabel":  "Open",
+    "variant":  "paper",
+    "category":  "Tool",
+    "span":  6,
+    "demoUrl":  "https://naweenkavinda.github.io/lk-take-home-pay/",
+    "links":  [
+                  {
+                      "label":  "Source code",
+                      "emoji":  "💻",
+                      "url":  "https://github.com/naweenkavinda/lk-take-home-pay"
+                  }
+              ]
+}

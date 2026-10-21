@@ -15,5 +15,13 @@
     "tableLabel":  "Open",
     "variant":  "paper",
     "category":  "3D model",
-    "span":  7
+    "span":  7,
+    "demoUrl":  "https://naweenkavinda.github.io/kgr-house/",
+    "links":  [
+                  {
+                      "label":  "Source code",
+                      "emoji":  "💻",
+                      "url":  "https://github.com/naweenkavinda/kgr-house"
+                  }
+              ]
 }

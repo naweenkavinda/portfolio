@@ -14,14 +14,20 @@
              ],
     "demoLabel":  "Open demo",
     "tableLabel":  "Demo",
+    "variant":  "paper",
+    "category":  "Shop",
+    "span":  6,
+    "demoUrl":  "https://naweenkavinda.github.io/book-shop/",
     "links":  [
                   {
                       "label":  "Real shop",
                       "emoji":  "🛒",
                       "url":  "https://comforting-gumption-b35bdf.netlify.app"
+                  },
+                  {
+                      "label":  "Source code",
+                      "emoji":  "💻",
+                      "url":  "https://github.com/naweenkavinda/book-shop"
                   }
-              ],
-    "variant":  "paper",
-    "category":  "Shop",
-    "span":  6
+              ]
 }

@@ -2,7 +2,7 @@
 
 A single-page tool for Sri Lankan National Identity Card (NIC) numbers. It builds a NIC from a date of birth and serial, and checks, decodes and converts existing NICs in both the old and new formats.
 
-**[▶ Open the live tool](https://naweenkavinda.github.io/portfolio/projects/nic-checker/)**
+**[▶ Open the live tool](https://naweenkavinda.github.io/nic-checker/)**
 
 ## What it does
 
@@ -49,3 +49,5 @@ Day numbers count February as 29 days in every year, and women's NICs add 500 to
 - Updates live as you type; copy buttons for each result
 - Mobile friendly: one column on phones, large tap targets, no sideways scrolling
 - Built as a claude.ai Artifact and also runs as a static page
+
+Source code: [naweenkavinda/nic-checker](https://github.com/naweenkavinda/nic-checker)
