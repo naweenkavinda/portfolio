@@ -1,0 +1,27 @@
+{
+    "order":  10,
+    "emoji":  "🧾",
+    "icon":  "sheet",
+    "kind":  "live",
+    "title":  "Receipt Snap",
+    "summary":  "Photograph or upload a receipt and the expense sheet fills itself in: date, shop, amount and category.",
+    "blurb":  "Snap or upload a receipt and the date, shop, total and category fill themselves in. Reads the receipt on your phone, keeps an expense sheet and exports to CSV.",
+    "tech":  [
+                 "Tesseract.js",
+                 "PWA",
+                 "IndexedDB"
+             ],
+    "demoLabel":  "Open tool",
+    "tableLabel":  "Open",
+    "variant":  "paper",
+    "category":  "Tool",
+    "span":  6,
+    "demoUrl":  "https://naweenkavinda.github.io/receipt-snap/",
+    "links":  [
+                  {
+                      "label":  "Source code",
+                      "emoji":  "💻",
+                      "url":  "https://github.com/naweenkavinda/receipt-snap"
+                  }
+              ]
+}
