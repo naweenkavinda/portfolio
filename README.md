@@ -21,6 +21,7 @@ This repo is a living portfolio of things I've built: internal tools, calculator
 <!-- PROJECTS:START -->
 | | Project | What it is | Tech | Live demo |
 |:---:|:---|:---|:---|:---:|
+| 🧾 | **[Receipt Snap](projects/receipt-snap)** | Photograph or upload a receipt and the expense sheet fills itself in: date, shop, amount and category. | `Tesseract.js` `PWA` `IndexedDB` | **[▶ Open](https://naweenkavinda.github.io/receipt-snap/)**<br><sub>[💻 Source code](https://github.com/naweenkavinda/receipt-snap)</sub> |
 | 🏠 | **[KGR House](projects/kgr-house)** | Interactive 3D walkable house model built from a real floor plan | `Three.js` `HTML` `JavaScript` | **[▶ Open](https://naweenkavinda.github.io/kgr-house/)**<br><sub>[💻 Source code](https://github.com/naweenkavinda/kgr-house)</sub> |
 | 📈 | **[Crypto Command Center](projects/crypto-command-center)** | Crypto market dashboard with a Sri Lanka VASP regulation tracker and stakeholder map | `d3.js` `JavaScript` `HTML` | **[▶ Open](https://naweenkavinda.github.io/crypto-command-center/)**<br><sub>[💻 Source code](https://github.com/naweenkavinda/crypto-command-center)</sub> |
 | 📋 | **[Work Command Center](projects/work-command-center)** | Team and personal action-item board with kanban, team views and category filters | `HTML` `CSS` `JavaScript` | **[▶ Demo](https://naweenkavinda.github.io/work-command-center/)**<br><sub>[💻 Source code](https://github.com/naweenkavinda/work-command-center)</sub> |
@@ -30,7 +31,6 @@ This repo is a living portfolio of things I've built: internal tools, calculator
 | 🐘 | **[Ali's Big Day](projects/alis-big-day)** | 15-page interactive storybook that builds thinking skills and hand-eye coordination for ages 3–6 | `HTML` `CSS` `JavaScript` `SVG` `Web Audio` | **[▶ Play](https://naweenkavinda.github.io/alis-big-day/)**<br><sub>[💻 Source code](https://github.com/naweenkavinda/alis-big-day)</sub> |
 | 🗺️ | **[Portfolio Homepage](projects/portfolio-homepage)** | This homepage: a site-plan design with line-art doodles that builds itself from the projects folder and checks every push for private data | `HTML` `JavaScript` `PowerShell` `GitHub Actions` | **[▶ Open](https://naweenkavinda.github.io/portfolio/)** |
 | 🧮 | **[Sri Lanka Take-Home Pay](projects/lk-take-home-pay)** | Salary calculator for Sri Lanka: APIT, EPF and ETF, real take-home pay and the employer's true cost. | `HTML` `JavaScript` `Tax law` | **[▶ Open](https://naweenkavinda.github.io/lk-take-home-pay/)**<br><sub>[💻 Source code](https://github.com/naweenkavinda/lk-take-home-pay)</sub> |
-| 🧾 | **[Receipt Snap](projects/receipt-snap)** | Photograph or upload a receipt and the expense sheet fills itself in: date, shop, amount and category. | `Tesseract.js` `PWA` `IndexedDB` | **[▶ Open](https://naweenkavinda.github.io/receipt-snap/)**<br><sub>[💻 Source code](https://github.com/naweenkavinda/receipt-snap)</sub> |
 <!-- PROJECTS:END -->
 
 <sub>Demos run on GitHub Pages. The book shop and visitor check-in demos send no data, the Work Command Center demo uses sample tasks, and the Crypto Command Center is a frozen data snapshot.</sub>
