@@ -10,7 +10,7 @@
   "demoUrl": "./",
   "demoLabel": "You're here",
   "tableLabel": "Open",
-  "span": 12,
+  "span":  7,
   "variant": "accent",
   "category": "Website"
 }
