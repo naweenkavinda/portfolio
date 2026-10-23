@@ -16,12 +16,12 @@
     "variant":  "paper",
     "category":  "Tool",
     "span":  5,
-    "demoUrl":  "https://naweenkavinda.github.io/receipt-snap/",
+    "demoUrl":  "https://naweenkavinda.github.io/cha-ching/",
     "links":  [
                   {
                       "label":  "Source code",
                       "emoji":  "💻",
-                      "url":  "https://github.com/naweenkavinda/receipt-snap"
+                      "url":  "https://github.com/naweenkavinda/cha-ching"
                   }
               ]
 }
